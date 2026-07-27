@@ -1,10 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { CatalogCard } from './catalog-card';
-import { CatalogFilters } from './catalog-filters';
-import { CatalogViewToggle } from './catalog-view-toggle';
-import { CatalogVocabularyFilters } from './catalog-vocabulary-filters';
 import { Pagination } from './pagination';
 import type { CatalogItem, CatalogQuery } from './types';
 
@@ -39,49 +36,14 @@ const item: CatalogItem = {
   },
 };
 
+// Mock next/navigation for client components rendered inside tests
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/catalog',
+}));
+
 describe('catalog view controls', () => {
-  it('preserves filters and search when switching between grid and list', () => {
-    render(<CatalogViewToggle query={query} />);
-
-    expect(screen.getByRole('link', { name: 'Tampilan list' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
-    expect(screen.getByRole('link', { name: 'Tampilan grid' })).toHaveAttribute(
-      'href',
-      '/catalog?level=N5&type=vocabulary&view=grid&page=2&q=makan&pos=verb&verb=ichidan&transitivity=transitive&theme=food_drink',
-    );
-  });
-
-  it('preserves list mode through filtering and pagination', () => {
-    render(
-      <>
-        <CatalogFilters query={query} />
-        <Pagination query={query} totalPages={3} />
-      </>,
-    );
-
-    expect(screen.getByDisplayValue('list')).toHaveAttribute('name', 'view');
-    expect(screen.getByRole('link', { name: /Berikutnya/ })).toHaveAttribute(
-      'href',
-      '/catalog?level=N5&type=vocabulary&view=list&page=3&q=makan&pos=verb&verb=ichidan&transitivity=transitive&theme=food_drink',
-    );
-  });
-
-  it('shows vocabulary taxonomy filters as a separate control', () => {
-    render(
-      <div>
-        <CatalogVocabularyFilters query={query} />
-        <CatalogViewToggle query={query} />
-      </div>,
-    );
-
-    expect(screen.getByText('Filter vocabulary')).toBeVisible();
-    expect(screen.getByLabelText('Kelas kata')).toHaveValue('verb');
-    expect(screen.getByLabelText('Tema')).toHaveValue('food_drink');
-    expect(screen.getByRole('navigation', { name: 'Mode tampilan katalog' })).toBeVisible();
-  });
-
   it('renders a compact list item with the same detail affordance', () => {
     render(<CatalogCard item={item} view="list" />);
 
@@ -94,5 +56,35 @@ describe('catalog view controls', () => {
       'href',
       '/catalog/content-id',
     );
+  });
+
+  it('preserves list mode through pagination links', () => {
+    render(<Pagination query={query} totalPages={3} />);
+
+    expect(screen.getByRole('link', { name: /Berikutnya/ })).toHaveAttribute(
+      'href',
+      '/catalog?level=N5&type=vocabulary&view=list&page=3&q=makan&pos=verb&verb=ichidan&transitivity=transitive&theme=food_drink',
+    );
+  });
+
+  it('renders taxonomy badges on vocabulary items', () => {
+    render(<CatalogCard item={item} view="list" />);
+
+    expect(screen.getByText('Kata kerja')).toBeVisible();
+    expect(screen.getByText('Makanan & minuman')).toBeVisible();
+  });
+
+  it('shows fallback text when no meanings', () => {
+    const itemNoMeanings: CatalogItem = { ...item, meanings: [] };
+    render(<CatalogCard item={itemNoMeanings} view="list" />);
+
+    expect(screen.getByText('Makna belum tersedia')).toBeVisible();
+  });
+
+  it('renders grid view card correctly', () => {
+    render(<CatalogCard item={item} view="grid" />);
+
+    expect(screen.getByRole('heading', { name: '食べる' })).toBeVisible();
+    expect(screen.getByText('たべる')).toBeVisible();
   });
 });

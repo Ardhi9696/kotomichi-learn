@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
+import { Suspense } from 'react';
+
 import { CatalogCard } from '@/features/catalog/catalog-card';
-import { CatalogFilters } from '@/features/catalog/catalog-filters';
-import { CatalogViewToggle } from '@/features/catalog/catalog-view-toggle';
-import { CatalogVocabularyFilters } from '@/features/catalog/catalog-vocabulary-filters';
+import { CatalogToolbar } from '@/features/catalog/catalog-toolbar';
 import { Pagination } from '@/features/catalog/pagination';
 import { getCatalog } from '@/features/catalog/queries';
 import {
@@ -48,7 +48,7 @@ function parseQuery(
     level: isLevel(level) ? level : 'N5',
     type: isCatalogType(type) ? type : 'all',
     search: first(searchParams.q)?.trim() ?? '',
-    view: isCatalogViewMode(view) ? view : 'grid',
+    view: isCatalogViewMode(view) ? view : 'list',
     partOfSpeech: isVocabularyPartOfSpeech(partOfSpeech) ? partOfSpeech : 'all',
     verbGroup: isVocabularyVerbGroup(verbGroup) ? verbGroup : 'all',
     transitivity: isVocabularyTransitivity(transitivity) ? transitivity : 'all',
@@ -79,21 +79,12 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
             akan muncul otomatis setelah melewati proses review.
           </p>
         </div>
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <span className="size-2 rounded-full bg-primary" />
-          {result.total.toLocaleString('id-ID')} materi ditemukan
-        </div>
       </header>
 
       <div className="mt-8">
-        <CatalogFilters query={query} />
-      </div>
-
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        {query.type === 'vocabulary' ? (
-          <CatalogVocabularyFilters query={query} />
-        ) : null}
-        <CatalogViewToggle query={query} />
+        <Suspense fallback={<ToolbarSkeleton />}>
+          <CatalogToolbar query={query} total={result.total} />
+        </Suspense>
       </div>
 
       {result.items.length ? (
@@ -102,8 +93,8 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
             aria-label="Daftar materi"
             className={
               query.view === 'list'
-                ? 'mt-4 grid gap-3'
-                : 'mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                ? 'mt-6 grid gap-3'
+                : 'mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
             }
           >
             {result.items.map((item) => (
@@ -121,5 +112,11 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         </section>
       )}
     </div>
+  );
+}
+
+function ToolbarSkeleton() {
+  return (
+    <div className="h-24 animate-pulse rounded-2xl bg-muted" />
   );
 }
