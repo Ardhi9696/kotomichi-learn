@@ -3,7 +3,18 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import type { Database } from '@/lib/supabase/database.types';
 
-const PROTECTED_PATHS = ['/dashboard', '/onboarding', '/settings', '/auth/update-password'];
+const PROTECTED_PATHS = [
+  '/admin',
+  '/dashboard',
+  '/editor',
+  '/learn',
+  '/review',
+  '/onboarding',
+  '/reports',
+  '/translations',
+  '/settings',
+  '/auth/update-password',
+];
 const AUTH_PATHS = ['/auth/login', '/auth/register'];
 
 function isPathWithin(pathname: string, paths: string[]): boolean {

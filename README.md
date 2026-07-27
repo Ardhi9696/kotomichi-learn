@@ -5,11 +5,21 @@ dari OpenJLPT dan disajikan melalui Supabase; dataset tidak disimpan di reposito
 
 ## Fitur saat ini
 
-- Landing page dan katalog materi N5–N1.
+- Landing page dan katalog materi N5–N1 dengan tampilan grid/list serta pencarian
+  judul, reading, makna Inggris, dan translation published.
+- Filter kosakata N5/N4 berdasarkan kelas kata, kelompok verba
+  godan/ichidan/tidak beraturan, transitivitas, jenis kata sifat い/な, dan
+  sembilan tema praktis.
 - Detail vocabulary, kanji, dan grammar dengan fallback bahasa Inggris.
 - Supabase Auth: email/password, Google OAuth, verifikasi email, dan pemulihan password.
 - Onboarding target JLPT, bahasa materi, dan target belajar harian.
 - Dashboard progres dasar.
+- Alur belajar terpadu: prompt depan, flip, pilihan ganda, feedback lengkap, lalu
+  rating SRS yang langsung membuka kartu berikutnya; sesi review langsung membuka kuis.
+- Navigasi akun responsif dengan sidebar desktop dan drawer mobile berbasis role.
+- Workspace translation Indonesia/Korea dengan review dan audit revisi.
+- Pengaturan profil, locale, target, tema, ekspor, dan penghapusan akun.
+- Panel sinkronisasi snapshot OpenJLPT untuk superadmin.
 - Atribusi dan informasi lisensi sumber materi.
 
 ## Stack
@@ -49,6 +59,9 @@ npm run test:e2e
 npm run build
 ```
 
+Terapkan seluruh migration di `supabase/migrations` sebelum menjalankan versi
+aplikasi terbaru.
+
 ## Struktur
 
 ```text
@@ -64,5 +77,14 @@ NOTICE.md            sumber data dan atribusi
 
 OpenJLPT tetap menjadi sumber kanonis materi. Supabase menyimpan serving copy yang
 diimpor satu arah. Terjemahan Indonesia dan Korea disimpan sebagai overlay terpisah.
+Taxonomy kosakata N5/N4 diperkaya dari JMdict untuk metadata gramatikal dan aturan
+tema Kotomichi yang deterministik. Hasil ambigu masuk antrean review editorial;
+classifier dapat dijalankan ulang melalui
+`node scripts/classify-vocabulary-n5-n4.mjs` setelah file sumber tersedia di `/tmp`.
+Detail dimensi dan prosedur regenerasi tersedia di
+[docs/vocabulary-taxonomy.md](./docs/vocabulary-taxonomy.md).
 
 Lihat [NOTICE.md](./NOTICE.md) dan halaman `/attributions` untuk atribusi lengkap.
+
+Panduan manifest, validasi, aktivasi, dan rollback tersedia di
+[docs/source-sync.md](./docs/source-sync.md).

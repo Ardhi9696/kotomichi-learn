@@ -2,11 +2,18 @@ import type { Metadata } from 'next';
 
 import { CatalogCard } from '@/features/catalog/catalog-card';
 import { CatalogFilters } from '@/features/catalog/catalog-filters';
+import { CatalogViewToggle } from '@/features/catalog/catalog-view-toggle';
 import { Pagination } from '@/features/catalog/pagination';
 import { getCatalog } from '@/features/catalog/queries';
 import {
   isCatalogType,
+  isCatalogViewMode,
   isLevel,
+  isVocabularyAdjectiveType,
+  isVocabularyPartOfSpeech,
+  isVocabularyTheme,
+  isVocabularyTransitivity,
+  isVocabularyVerbGroup,
   type CatalogQuery,
 } from '@/features/catalog/types';
 
@@ -29,11 +36,25 @@ function parseQuery(
   const level = first(searchParams.level);
   const type = first(searchParams.type);
   const rawPage = Number(first(searchParams.page) ?? '1');
+  const view = first(searchParams.view);
+  const partOfSpeech = first(searchParams.pos);
+  const verbGroup = first(searchParams.verb);
+  const transitivity = first(searchParams.transitivity);
+  const adjectiveType = first(searchParams.adjective);
+  const theme = first(searchParams.theme);
 
   return {
     level: isLevel(level) ? level : 'N5',
     type: isCatalogType(type) ? type : 'all',
     search: first(searchParams.q)?.trim() ?? '',
+    view: isCatalogViewMode(view) ? view : 'grid',
+    partOfSpeech: isVocabularyPartOfSpeech(partOfSpeech) ? partOfSpeech : 'all',
+    verbGroup: isVocabularyVerbGroup(verbGroup) ? verbGroup : 'all',
+    transitivity: isVocabularyTransitivity(transitivity) ? transitivity : 'all',
+    adjectiveType: isVocabularyAdjectiveType(adjectiveType)
+      ? adjectiveType
+      : 'all',
+    theme: isVocabularyTheme(theme) ? theme : 'all',
     page: Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1,
   };
 }
@@ -69,12 +90,19 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
 
       {result.items.length ? (
         <>
+          <div className="mt-6 flex justify-end">
+            <CatalogViewToggle query={query} />
+          </div>
           <section
             aria-label="Daftar materi"
-            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className={
+              query.view === 'list'
+                ? 'mt-4 grid gap-3'
+                : 'mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            }
           >
             {result.items.map((item) => (
-              <CatalogCard item={item} key={item.id} />
+              <CatalogCard item={item} key={item.id} view={query.view} />
             ))}
           </section>
           <Pagination query={query} totalPages={result.totalPages} />

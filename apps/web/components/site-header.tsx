@@ -4,13 +4,11 @@ import { BrandMark } from '@/components/brand-mark';
 
 const navigation = [
   { href: '/catalog', label: 'Materi' },
-  { href: '/catalog?level=N5&type=vocabulary', label: 'Kosakata' },
-  { href: '/catalog?level=N5&type=kanji', label: 'Kanji' },
-  { href: '/catalog?level=N5&type=grammar', label: 'Grammar' },
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/learn', label: 'Mulai belajar' },
+  { href: '/attributions', label: 'Tentang sumber' },
 ] as const;
 
-export function SiteHeader() {
+export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background/92 backdrop-blur-xl">
       <div className="mx-auto flex min-h-18 max-w-7xl items-center gap-5 px-5 sm:px-8">
@@ -27,7 +25,7 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navigasi utama"
-          className="ml-auto hidden items-center gap-1 lg:flex"
+          className="ml-auto hidden items-center gap-1 md:flex"
         >
           {navigation.map((item) => (
             <Link
@@ -40,27 +38,29 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 lg:ml-4">
-          <Link
-            className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-surface hover:text-primary focus-visible:outline-2 sm:inline-flex"
-            href="/auth/login"
-          >
-            Masuk
-          </Link>
+        <div className="ml-auto flex items-center gap-2 md:ml-4">
+          {!isAuthenticated ? (
+            <Link
+              className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-surface hover:text-primary focus-visible:outline-2 sm:inline-flex"
+              href="/auth/login"
+            >
+              Masuk
+            </Link>
+          ) : null}
           <Link
             className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover focus-visible:outline-2"
             href="/dashboard"
           >
-            Akun saya
+            {isAuthenticated ? 'Dashboard' : 'Mulai sekarang'}
           </Link>
         </div>
       </div>
 
       <nav
-        aria-label="Navigasi materi"
-        className="flex gap-1 overflow-x-auto border-t border-border/60 px-4 py-2 lg:hidden"
+        aria-label="Navigasi utama mobile"
+        className="flex gap-1 overflow-x-auto border-t border-border/60 px-4 py-2 md:hidden"
       >
-        {navigation.map((item) => (
+        {navigation.slice(0, 2).map((item) => (
           <Link
             className="shrink-0 rounded-full px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-surface hover:text-foreground"
             href={item.href}

@@ -7,9 +7,15 @@ function pageHref(query: CatalogQuery, page: number): string {
   const params = new URLSearchParams({
     level: query.level,
     type: query.type,
+    view: query.view,
     page: String(page),
   });
   if (query.search) params.set('q', query.search);
+  if (query.partOfSpeech !== 'all') params.set('pos', query.partOfSpeech);
+  if (query.verbGroup !== 'all') params.set('verb', query.verbGroup);
+  if (query.transitivity !== 'all') params.set('transitivity', query.transitivity);
+  if (query.adjectiveType !== 'all') params.set('adjective', query.adjectiveType);
+  if (query.theme !== 'all') params.set('theme', query.theme);
   return `/catalog?${params.toString()}`;
 }
 

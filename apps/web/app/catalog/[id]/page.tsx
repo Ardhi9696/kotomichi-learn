@@ -2,8 +2,22 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { ArrowIcon } from '@/components/arrow-icon';
+import { SubmitButton } from '@/components/auth/submit-button';
 import { getContentDetail } from '@/features/catalog/queries';
 import { isLocale } from '@/features/catalog/types';
+import {
+  adjectiveTypeLabels,
+  partOfSpeechLabels,
+  themeLabels,
+  transitivityLabels,
+  verbGroupLabels,
+} from '@/features/catalog/vocabulary-taxonomy';
+import { createContentReport } from '@/features/reports/actions';
+import {
+  REPORT_FIELDS,
+  reportFieldLabels,
+} from '@/features/reports/report-schema';
+import { createClient } from '@/lib/supabase/server';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -28,12 +42,22 @@ export default async function ContentDetailPage({
   searchParams,
 }: DetailPageProps) {
   const { id } = await params;
-  const rawLocale = await searchParams;
-  const localeValue = Array.isArray(rawLocale.locale)
-    ? rawLocale.locale[0]
-    : rawLocale.locale;
+  const rawSearchParams = await searchParams;
+  const localeValue = Array.isArray(rawSearchParams.locale)
+    ? rawSearchParams.locale[0]
+    : rawSearchParams.locale;
   const locale = isLocale(localeValue) ? localeValue : 'id';
-  const detail = await getContentDetail(id, locale);
+  const [detail, supabase] = await Promise.all([getContentDetail(id, locale), createClient()]);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const message = Array.isArray(rawSearchParams.message)
+    ? rawSearchParams.message[0]
+    : rawSearchParams.message;
+  const error = Array.isArray(rawSearchParams.error)
+    ? rawSearchParams.error[0]
+    : rawSearchParams.error;
+  const returnPath = `/catalog/${id}?locale=${locale}#laporkan`;
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
@@ -177,14 +201,140 @@ export default async function ContentDetailPage({
             ) : null}
 
             {detail.type === 'vocabulary' ? (
-              <p className="mt-5 text-sm leading-7 text-background/70">
-                Materi ini berasal dari snapshot OpenJLPT aktif. Progres belajar nantinya
-                terikat pada identitas kata, bukan bahasa terjemahan.
-              </p>
+              <div className="mt-5 grid gap-5 text-sm">
+                {detail.taxonomy && !detail.taxonomy.needsReview ? (
+                  <>
+                    <div>
+                      <p className="text-background/55">Kelas kata</p>
+                      <p className="mt-1 font-medium">
+                        {detail.taxonomy.partsOfSpeech
+                          .map((value) => partOfSpeechLabels[value])
+                          .join(' · ')}
+                      </p>
+                    </div>
+                    {detail.taxonomy.verbGroups.length ? (
+                      <div>
+                        <p className="text-background/55">Jenis kata kerja</p>
+                        <p className="mt-1 font-medium">
+                          {[
+                            ...detail.taxonomy.verbGroups.map(
+                              (value) => verbGroupLabels[value],
+                            ),
+                            ...detail.taxonomy.transitivities.map(
+                              (value) => transitivityLabels[value],
+                            ),
+                          ].join(' · ')}
+                        </p>
+                      </div>
+                    ) : null}
+                    {detail.taxonomy.adjectiveTypes.length ? (
+                      <div>
+                        <p className="text-background/55">Jenis kata sifat</p>
+                        <p className="mt-1 font-medium">
+                          {detail.taxonomy.adjectiveTypes
+                            .map((value) => adjectiveTypeLabels[value])
+                            .join(' · ')}
+                        </p>
+                      </div>
+                    ) : null}
+                    {detail.taxonomy.themes.length ? (
+                      <div className="flex flex-wrap gap-2 border-t border-white/15 pt-5">
+                        {detail.taxonomy.themes.map((value) => (
+                          <span
+                            className="rounded-full border border-white/20 px-3 py-1 text-xs"
+                            key={value}
+                          >
+                            {themeLabels[value]}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </>
+                ) : detail.taxonomy?.needsReview ? (
+                  <p className="leading-7 text-background/70">
+                    Klasifikasi sedang menunggu review editorial.
+                  </p>
+                ) : (
+                  <p className="leading-7 text-background/70">
+                    Klasifikasi kosakata ini belum tersedia.
+                  </p>
+                )}
+              </div>
             ) : null}
           </aside>
         </div>
       </article>
+
+      <section
+        className="mt-8 rounded-3xl border border-border bg-surface p-6 shadow-card sm:p-8"
+        id="laporkan"
+      >
+        <p className="text-xs font-bold tracking-[0.18em] text-primary uppercase">
+          Bantu jaga kualitas
+        </p>
+        <h2 className="mt-2 font-serif text-2xl font-bold">Laporkan masalah materi</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Beri tahu kami jika ada makna, cara baca, contoh, atau metadata yang perlu
+          diperiksa.
+        </p>
+
+        {message ? (
+          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
+            {message}
+          </div>
+        ) : null}
+        {error ? (
+          <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+            {error}
+          </div>
+        ) : null}
+
+        {user ? (
+          <form action={createContentReport} className="mt-6 grid gap-5">
+            <input name="content_item_id" type="hidden" value={id} />
+            <input name="locale" type="hidden" value={locale} />
+            <label className="grid gap-2 text-sm font-semibold">
+              Bagian yang bermasalah
+              <select
+                className="rounded-xl border border-border bg-background px-4 py-3 font-normal outline-none focus:border-primary"
+                name="field_name"
+              >
+                {REPORT_FIELDS.map((field) => (
+                  <option key={field} value={field}>
+                    {reportFieldLabels[field]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-2 text-sm font-semibold">
+              Penjelasan
+              <textarea
+                className="min-h-32 rounded-xl border border-border bg-background px-4 py-3 font-normal leading-6 outline-none focus:border-primary"
+                maxLength={1000}
+                minLength={10}
+                name="message"
+                placeholder="Jelaskan bagian yang perlu diperiksa dan koreksi yang disarankan."
+                required
+              />
+            </label>
+            <div>
+              <SubmitButton pendingLabel="Mengirim laporan…">Kirim laporan</SubmitButton>
+            </div>
+          </form>
+        ) : (
+          <div className="mt-6 rounded-2xl bg-background p-5">
+            <p className="text-sm text-muted-foreground">
+              Masuk terlebih dahulu agar laporan dapat ditindaklanjuti.
+            </p>
+            <Link
+              className="mt-4 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-primary-hover"
+              href={`/auth/login?next=${encodeURIComponent(returnPath)}`}
+            >
+              Masuk untuk melapor
+            </Link>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

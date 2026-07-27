@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_JP, Noto_Serif_JP, Plus_Jakarta_Sans } from 'next/font/google';
 
-import { SiteFooter } from '@/components/site-footer';
-import { SiteHeader } from '@/components/site-header';
+import { AppShell } from '@/components/app-shell';
+import { createClient } from '@/lib/supabase/server';
 
 import './globals.css';
 
@@ -33,9 +33,31 @@ export const metadata: Metadata = {
     'Belajar vocabulary, kanji, dan grammar JLPT N5–N1 dengan jalur yang terstruktur.',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const [profileResult, rolesResult] = user
+    ? await Promise.all([
+        supabase
+          .from('profiles')
+          .select('display_name,target_level,theme')
+          .eq('id', user.id)
+          .maybeSingle(),
+        supabase.from('user_roles').select('role').eq('user_id', user.id),
+      ])
+    : [{ data: null }, { data: [] }];
+  const profile = profileResult.data;
+  const theme =
+    profile?.theme === 'dark' || profile?.theme === 'system'
+      ? profile.theme
+      : 'light';
+
   return (
-    <html lang="id">
+    <html data-scroll-behavior="smooth" data-theme={theme} lang="id">
       <body className={`${jakarta.variable} ${notoSansJp.variable} ${notoSerifJp.variable}`}>
         <a
           className="fixed top-3 left-3 z-50 -translate-y-24 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background focus:translate-y-0"
@@ -43,9 +65,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Lewati ke konten
         </a>
-        <SiteHeader />
-        <main id="main-content">{children}</main>
-        <SiteFooter />
+        <AppShell
+          viewer={
+            user
+              ? {
+                  displayName:
+                    profile?.display_name ?? user.email?.split('@')[0] ?? 'Learner',
+                  email: user.email ?? '',
+                  targetLevel: profile?.target_level ?? 'N5',
+                  roles: rolesResult.data?.map((row) => row.role) ?? [],
+                }
+              : null
+          }
+        >
+          {children}
+        </AppShell>
       </body>
     </html>
   );

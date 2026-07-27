@@ -17,15 +17,16 @@ export type Database = {
       content_items: {
         Row: {
           character: string | null
+          content_origin: string
           content_type: Database["public"]["Enums"]["content_type"]
           created_at: string
           current_snapshot_id: string | null
           current_source_fingerprint: string | null
-          first_seen_snapshot_id: string
+          first_seen_snapshot_id: string | null
           id: string
           identity_key: string
           is_active: boolean
-          last_seen_snapshot_id: string
+          last_seen_snapshot_id: string | null
           level: Database["public"]["Enums"]["jlpt_level"]
           pattern: string | null
           reading: string | null
@@ -34,15 +35,16 @@ export type Database = {
         }
         Insert: {
           character?: string | null
+          content_origin?: string
           content_type: Database["public"]["Enums"]["content_type"]
           created_at?: string
           current_snapshot_id?: string | null
           current_source_fingerprint?: string | null
-          first_seen_snapshot_id: string
+          first_seen_snapshot_id?: string | null
           id?: string
           identity_key: string
           is_active?: boolean
-          last_seen_snapshot_id: string
+          last_seen_snapshot_id?: string | null
           level: Database["public"]["Enums"]["jlpt_level"]
           pattern?: string | null
           reading?: string | null
@@ -51,15 +53,16 @@ export type Database = {
         }
         Update: {
           character?: string | null
+          content_origin?: string
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string
           current_snapshot_id?: string | null
           current_source_fingerprint?: string | null
-          first_seen_snapshot_id?: string
+          first_seen_snapshot_id?: string | null
           id?: string
           identity_key?: string
           is_active?: boolean
-          last_seen_snapshot_id?: string
+          last_seen_snapshot_id?: string | null
           level?: Database["public"]["Enums"]["jlpt_level"]
           pattern?: string | null
           reading?: string | null
@@ -143,6 +146,71 @@ export type Database = {
           },
         ]
       }
+      editorial_content_details: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          editor_id: string
+          examples: Json
+          formation: string
+          frequency: number | null
+          grade: number | null
+          kunyomi: string[]
+          meanings: string[]
+          notes: string
+          onyomi: string[]
+          reading: string
+          strokes: number | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          editor_id: string
+          examples?: Json
+          formation?: string
+          frequency?: number | null
+          grade?: number | null
+          kunyomi?: string[]
+          meanings: string[]
+          notes?: string
+          onyomi?: string[]
+          reading?: string
+          strokes?: number | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          editor_id?: string
+          examples?: Json
+          formation?: string
+          frequency?: number | null
+          grade?: number | null
+          kunyomi?: string[]
+          meanings?: string[]
+          notes?: string
+          onyomi?: string[]
+          reading?: string
+          strokes?: number | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editorial_content_details_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: true
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grammar: {
         Row: {
           content_item_id: string
@@ -217,6 +285,7 @@ export type Database = {
           reviewer_id: string | null
           source_fingerprint: string
           status: Database["public"]["Enums"]["translation_status"]
+          submitted_at: string | null
           tags: string[]
           updated_at: string
         }
@@ -236,6 +305,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           tags?: string[]
           updated_at?: string
         }
@@ -255,6 +325,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint?: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           tags?: string[]
           updated_at?: string
         }
@@ -342,6 +413,7 @@ export type Database = {
           reviewer_id: string | null
           source_fingerprint: string
           status: Database["public"]["Enums"]["translation_status"]
+          submitted_at: string | null
           updated_at: string
         }
         Insert: {
@@ -357,6 +429,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -372,6 +445,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint?: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -446,6 +520,57 @@ export type Database = {
           },
         ]
       }
+      learning_session_items: {
+        Row: {
+          client_attempt_id: string
+          completed_at: string | null
+          content_item_id: string
+          created_at: string
+          position: number
+          progress_applied_at: string | null
+          session_id: string
+          studied_at: string | null
+          user_id: string
+        }
+        Insert: {
+          client_attempt_id?: string
+          completed_at?: string | null
+          content_item_id: string
+          created_at?: string
+          position: number
+          progress_applied_at?: string | null
+          session_id: string
+          studied_at?: string | null
+          user_id: string
+        }
+        Update: {
+          client_attempt_id?: string
+          completed_at?: string | null
+          content_item_id?: string
+          created_at?: string
+          position?: number
+          progress_applied_at?: string | null
+          session_id?: string
+          studied_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_session_items_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_session_items_session_user_fk"
+            columns: ["session_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "learning_sessions"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
       learning_sessions: {
         Row: {
           completed_at: string | null
@@ -455,6 +580,7 @@ export type Database = {
           created_at: string
           id: string
           level: Database["public"]["Enums"]["jlpt_level"]
+          session_mode: string
           started_at: string
           target_item_count: number
           user_id: string
@@ -467,6 +593,7 @@ export type Database = {
           created_at?: string
           id?: string
           level: Database["public"]["Enums"]["jlpt_level"]
+          session_mode?: string
           started_at?: string
           target_item_count: number
           user_id: string
@@ -479,6 +606,7 @@ export type Database = {
           created_at?: string
           id?: string
           level?: Database["public"]["Enums"]["jlpt_level"]
+          session_mode?: string
           started_at?: string
           target_item_count?: number
           user_id?: string
@@ -529,6 +657,7 @@ export type Database = {
       }
       quiz_attempts: {
         Row: {
+          answer_text: string | null
           answered_at: string
           client_attempt_id: string
           content_item_id: string
@@ -542,6 +671,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          answer_text?: string | null
           answered_at?: string
           client_attempt_id: string
           content_item_id: string
@@ -555,6 +685,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          answer_text?: string | null
           answered_at?: string
           client_attempt_id?: string
           content_item_id?: string
@@ -631,6 +762,53 @@ export type Database = {
           validated_at?: string | null
         }
         Relationships: []
+      }
+      translation_revisions: {
+        Row: {
+          changed_by: string | null
+          content_item_id: string
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at: string
+          id: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          operation: string
+          payload: Json
+          status: Database["public"]["Enums"]["translation_status"]
+          translation_id: string
+        }
+        Insert: {
+          changed_by?: string | null
+          content_item_id: string
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          id?: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          operation: string
+          payload: Json
+          status: Database["public"]["Enums"]["translation_status"]
+          translation_id: string
+        }
+        Update: {
+          changed_by?: string | null
+          content_item_id?: string
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          id?: string
+          locale?: Database["public"]["Enums"]["translation_locale"]
+          operation?: string
+          payload?: Json
+          status?: Database["public"]["Enums"]["translation_status"]
+          translation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_revisions_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -719,6 +897,7 @@ export type Database = {
           reviewer_id: string | null
           source_fingerprint: string
           status: Database["public"]["Enums"]["translation_status"]
+          submitted_at: string | null
           updated_at: string
         }
         Insert: {
@@ -735,6 +914,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -751,6 +931,7 @@ export type Database = {
           reviewer_id?: string | null
           source_fingerprint?: string
           status?: Database["public"]["Enums"]["translation_status"]
+          submitted_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -763,15 +944,214 @@ export type Database = {
           },
         ]
       }
+      vocabulary_taxonomy: {
+        Row: {
+          adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          classification_source: string
+          confidence: number
+          content_item_id: string
+          created_at: string
+          needs_review: boolean
+          parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_reference: string | null
+          themes: Database["public"]["Enums"]["vocabulary_theme"][]
+          transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          updated_at: string
+          verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Insert: {
+          adjective_types?: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          classification_source?: string
+          confidence?: number
+          content_item_id: string
+          created_at?: string
+          needs_review?: boolean
+          parts_of_speech?: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_reference?: string | null
+          themes?: Database["public"]["Enums"]["vocabulary_theme"][]
+          transitivities?: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          updated_at?: string
+          verb_groups?: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Update: {
+          adjective_types?: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          classification_source?: string
+          confidence?: number
+          content_item_id?: string
+          created_at?: string
+          needs_review?: boolean
+          parts_of_speech?: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_reference?: string | null
+          themes?: Database["public"]["Enums"]["vocabulary_theme"][]
+          transitivities?: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          updated_at?: string
+          verb_groups?: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_taxonomy_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: true
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_learning_review: {
+        Args: {
+          p_attempts_count: number
+          p_correct_count: number
+          p_ease_factor: number
+          p_interval_days: number
+          p_mastered_at: string | null
+          p_next_review_at: string
+          p_position: number
+          p_rating: Database["public"]["Enums"]["review_rating"]
+          p_review_count: number
+          p_session_id: string
+          p_status: Database["public"]["Enums"]["learning_status"]
+        }
+        Returns: boolean
+      }
+      assign_user_role_by_email: {
+        Args: {
+          p_email: string
+          p_role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: string
+      }
+      browse_catalog_items: {
+        Args: {
+          p_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          p_content_type: Database["public"]["Enums"]["content_type"] | null
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_limit: number
+          p_offset: number
+          p_parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          p_search: string
+          p_themes: Database["public"]["Enums"]["vocabulary_theme"][]
+          p_transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          p_verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Returns: {
+          content_item_id: string
+          total_count: number
+        }[]
+      }
+      activate_source_snapshot: {
+        Args: { p_snapshot_id: string }
+        Returns: Json
+      }
+      create_source_snapshot: {
+        Args: {
+          p_dataset_checksum: string
+          p_source_commit: string
+          p_source_version: string
+        }
+        Returns: string
+      }
+      delete_own_account: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_learning_activity: {
+        Args: { p_timezone?: string }
+        Returns: {
+          activity_date: string
+          completed_items: number
+          correct_answers: number
+          sessions_completed: number
+          total_answers: number
+        }[]
+      }
+      remove_user_role: {
+        Args: {
+          p_role: Database["public"]["Enums"]["app_role"]
+          p_user_id: string
+        }
+        Returns: boolean
+      }
+      import_source_batch: {
+        Args: {
+          p_content_type: Database["public"]["Enums"]["content_type"]
+          p_items: Json
+          p_snapshot_id: string
+        }
+        Returns: number
+      }
+      save_editorial_content: {
+        Args: {
+          p_content_item_id: string | null
+          p_content_type: Database["public"]["Enums"]["content_type"]
+          p_examples: Json
+          p_formation: string
+          p_frequency: number | null
+          p_grade: number | null
+          p_kunyomi: string[]
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_meanings: string[]
+          p_notes: string
+          p_onyomi: string[]
+          p_reading: string
+          p_strokes: number | null
+          p_tags: string[]
+          p_title: string
+        }
+        Returns: string
+      }
+      save_vocabulary_taxonomy: {
+        Args: {
+          p_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          p_content_item_id: string
+          p_parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          p_themes: Database["public"]["Enums"]["vocabulary_theme"][]
+          p_transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          p_verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Returns: boolean
+      }
+      set_content_active: {
+        Args: {
+          p_content_item_id: string
+          p_is_active: boolean
+        }
+        Returns: boolean
+      }
+      search_catalog_items: {
+        Args: {
+          p_content_type: Database["public"]["Enums"]["content_type"] | null
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_limit: number
+          p_offset: number
+          p_search: string
+        }
+        Returns: {
+          content_item_id: string
+          total_count: number
+        }[]
+      }
+      source_snapshot_diff: {
+        Args: { p_snapshot_id: string }
+        Returns: Json
+      }
+      validate_source_snapshot: {
+        Args: { p_snapshot_id: string }
+        Returns: Json
+      }
     }
     Enums: {
-      app_role: "editor" | "reviewer" | "admin"
+      app_role: "editor" | "reviewer" | "admin" | "superadmin"
       content_type: "vocabulary" | "kanji" | "grammar"
       jlpt_level: "N5" | "N4" | "N3" | "N2" | "N1"
       learning_status: "new" | "learning" | "review" | "mastered"
@@ -785,6 +1165,20 @@ export type Database = {
         | "failed"
       translation_locale: "id" | "ko"
       translation_status: "draft" | "reviewed" | "published" | "needs_review"
+      vocabulary_adjective_type: "i" | "na"
+      vocabulary_part_of_speech: "noun" | "verb" | "adjective" | "other"
+      vocabulary_theme:
+        | "numbers_units"
+        | "self_family"
+        | "time_weather"
+        | "daily_life"
+        | "food_drink"
+        | "school_work"
+        | "travel_places"
+        | "nature_health"
+        | "communication_feelings"
+      vocabulary_transitivity: "transitive" | "intransitive"
+      vocabulary_verb_group: "godan" | "ichidan" | "irregular"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -912,7 +1306,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["editor", "reviewer", "admin"],
+      app_role: ["editor", "reviewer", "admin", "superadmin"],
       content_type: ["vocabulary", "kanji", "grammar"],
       jlpt_level: ["N5", "N4", "N3", "N2", "N1"],
       learning_status: ["new", "learning", "review", "mastered"],
@@ -927,6 +1321,21 @@ export const Constants = {
       ],
       translation_locale: ["id", "ko"],
       translation_status: ["draft", "reviewed", "published", "needs_review"],
+      vocabulary_adjective_type: ["i", "na"],
+      vocabulary_part_of_speech: ["noun", "verb", "adjective", "other"],
+      vocabulary_theme: [
+        "numbers_units",
+        "self_family",
+        "time_weather",
+        "daily_life",
+        "food_drink",
+        "school_work",
+        "travel_places",
+        "nature_health",
+        "communication_feelings",
+      ],
+      vocabulary_transitivity: ["transitive", "intransitive"],
+      vocabulary_verb_group: ["godan", "ichidan", "irregular"],
     },
   },
 } as const
