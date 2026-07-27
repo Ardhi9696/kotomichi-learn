@@ -1049,6 +1049,65 @@ export type Database = {
           total_count: number
         }[]
       }
+      browse_catalog_items_with_details: {
+        Args: {
+          p_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          p_content_type: Database["public"]["Enums"]["content_type"] | null
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_limit: number
+          p_offset: number
+          p_parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          p_search: string
+          p_themes: Database["public"]["Enums"]["vocabulary_theme"][]
+          p_transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          p_verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Returns: {
+          content_item_id: string
+          total_count: number
+          item_word: string | null
+          item_reading: string | null
+          item_character: string | null
+          item_pattern: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          level: Database["public"]["Enums"]["jlpt_level"]
+          vocab_word: string | null
+          vocab_reading: string | null
+          vocab_meanings: string[] | null
+          vocab_examples: Json | null
+          kanji_char: string | null
+          kanji_meanings: string[] | null
+          kanji_onyomi: string[] | null
+          kanji_kunyomi: string[] | null
+          kanji_strokes: number | null
+          kanji_grade: number | null
+          kanji_frequency: number | null
+          grammar_pattern: string | null
+          grammar_meaning: string | null
+          grammar_formation: string | null
+          grammar_examples: Json | null
+          grammar_tags: string[] | null
+          grammar_notes: string | null
+          editorial_title: string | null
+          editorial_reading: string | null
+          editorial_meanings: string[] | null
+          editorial_examples: Json | null
+          editorial_formation: string | null
+          editorial_tags: string[] | null
+          editorial_notes: string | null
+          editorial_onyomi: string[] | null
+          editorial_kunyomi: string[] | null
+          editorial_strokes: number | null
+          editorial_grade: number | null
+          editorial_frequency: number | null
+          taxonomy_parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][] | null
+          taxonomy_verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][] | null
+          taxonomy_transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][] | null
+          taxonomy_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][] | null
+          taxonomy_themes: Database["public"]["Enums"]["vocabulary_theme"][] | null
+          taxonomy_needs_review: boolean | null
+        }[]
+      }
       activate_source_snapshot: {
         Args: { p_snapshot_id: string }
         Returns: Json
