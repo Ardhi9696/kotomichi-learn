@@ -10,12 +10,21 @@
   --color-surface: var(--theme-surface);
   --color-border: var(--theme-border);
   --color-accent: var(--theme-accent);
+  --color-inverse: var(--theme-inverse-background);
+  --color-inverse-surface: var(--theme-inverse-surface);
+  --color-inverse-foreground: var(--theme-inverse-foreground);
+  --color-inverse-muted: var(--theme-inverse-muted);
+  --color-inverse-border: var(--theme-inverse-border);
+  --color-overlay: var(--theme-overlay-background);
+  --color-overlay-foreground: var(--theme-overlay-foreground);
+  --color-overlay-border: var(--theme-overlay-border);
   --font-sans: var(--font-jakarta), var(--font-noto-sans-jp), system-ui, sans-serif;
   --font-serif: var(--font-noto-serif-jp), 'Yu Mincho', serif;
   --shadow-card: 0 18px 60px rgb(46 37 32 / 7%);
 }
 
 :root {
+  color-scheme: light;
   --theme-primary: #c92c23;
   --theme-primary-hover: #a9231c;
   --theme-primary-soft: #fbe9e7;
@@ -25,6 +34,19 @@
   --theme-surface: #ffffff;
   --theme-border: #e6e1d8;
   --theme-accent: #d4af37;
+  --theme-inverse-background: #eee8df;
+  --theme-inverse-surface: #fffaf4;
+  --theme-inverse-foreground: #211d1a;
+  --theme-inverse-muted: #5f574f;
+  --theme-inverse-border: #c9bbb0;
+  --theme-overlay-background: #352e29;
+  --theme-overlay-foreground: #fffaf4;
+  --theme-overlay-border: #75685f;
+}
+
+html[data-theme='light'],
+html[data-theme='system'] {
+  color-scheme: light;
 }
 
 html[data-theme='dark'] {
@@ -38,6 +60,14 @@ html[data-theme='dark'] {
   --theme-surface: #211e1b;
   --theme-border: #3a342f;
   --theme-accent: #e4c75e;
+  --theme-inverse-background: #090807;
+  --theme-inverse-surface: #151210;
+  --theme-inverse-foreground: #fffdf8;
+  --theme-inverse-muted: #d8cfc5;
+  --theme-inverse-border: #62574f;
+  --theme-overlay-background: #15110f;
+  --theme-overlay-foreground: #fffdf8;
+  --theme-overlay-border: #6b5f57;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -52,6 +82,14 @@ html[data-theme='dark'] {
     --theme-surface: #211e1b;
     --theme-border: #3a342f;
     --theme-accent: #e4c75e;
+    --theme-inverse-background: #090807;
+    --theme-inverse-surface: #151210;
+    --theme-inverse-foreground: #fffdf8;
+    --theme-inverse-muted: #d8cfc5;
+    --theme-inverse-border: #62574f;
+    --theme-overlay-background: #15110f;
+    --theme-overlay-foreground: #fffdf8;
+    --theme-overlay-border: #6b5f57;
   }
 }
 

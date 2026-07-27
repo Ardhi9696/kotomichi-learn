@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 import { deleteAccount, updateProfile } from '@/app/settings/actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { SubmitButton } from '@/components/auth/submit-button';
+import { ThemePreferenceSelect } from '@/components/theme-preference-select';
 import { LEVELS } from '@/features/catalog/types';
+import type { ThemePreference } from '@/features/settings/profile-schema';
 import { requireUser } from '@/lib/auth/require-user';
 
 export const metadata: Metadata = {
@@ -32,6 +34,12 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const params = await searchParams;
   const error = Array.isArray(params.error) ? params.error[0] : params.error;
   const message = Array.isArray(params.message) ? params.message[0] : params.message;
+  const profileTheme: ThemePreference =
+    profile?.theme === 'light' ||
+    profile?.theme === 'dark' ||
+    profile?.theme === 'system'
+      ? profile.theme
+      : 'system';
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
@@ -125,18 +133,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               type="number"
             />
           </label>
-          <label className="grid gap-2 text-sm font-semibold sm:col-span-2">
-            Tema
-            <select
-              className="h-12 rounded-xl border border-border bg-background px-4 font-normal"
-              defaultValue={profile?.theme ?? 'light'}
-              name="theme"
-            >
-              <option value="light">Terang</option>
-              <option value="dark">Gelap</option>
-              <option value="system">Ikuti sistem</option>
-            </select>
-          </label>
+          <ThemePreferenceSelect initialTheme={profileTheme} />
         </div>
         <div className="max-w-xs">
           <SubmitButton pendingLabel="Menyimpan…">Simpan pengaturan</SubmitButton>

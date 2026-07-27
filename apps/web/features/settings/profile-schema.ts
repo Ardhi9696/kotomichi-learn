@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export const themePreferenceSchema = z.enum(['light', 'dark', 'system']);
+export type ThemePreference = z.infer<typeof themePreferenceSchema>;
+
 export const profileSchema = z.object({
   display_name: z.string().trim().min(2, 'Nama minimal 2 karakter.').max(60),
   avatar_url: z
@@ -14,7 +17,7 @@ export const profileSchema = z.object({
   interface_locale: z.enum(['en', 'id', 'ko']),
   target_level: z.enum(['N5', 'N4', 'N3', 'N2', 'N1']),
   daily_goal: z.coerce.number().int().min(1).max(200),
-  theme: z.enum(['light', 'dark', 'system']),
+  theme: themePreferenceSchema,
 });
 
 export const deleteAccountSchema = z.object({

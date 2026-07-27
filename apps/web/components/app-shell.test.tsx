@@ -19,10 +19,15 @@ vi.mock('@/app/auth/actions', () => ({
   logout: vi.fn(),
 }));
 
+vi.mock('@/app/settings/actions', () => ({
+  saveThemePreference: vi.fn(async () => ({ success: true })),
+}));
+
 const learner: AppViewer = {
   displayName: 'Kotomichi Learner',
   email: 'learner@example.com',
   targetLevel: 'N3',
+  theme: 'system',
   roles: [],
 };
 
@@ -93,6 +98,7 @@ describe('AppShell', () => {
     );
 
     expect(screen.getByRole('navigation', { name: 'Navigasi utama' })).toBeVisible();
+    expect(screen.getByLabelText('Tema: Sistem')).toBeVisible();
     expect(screen.getByText('Kotomichi Learn')).toBeVisible();
   });
 });

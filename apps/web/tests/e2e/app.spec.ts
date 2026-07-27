@@ -1,5 +1,107 @@
 import { expect, test } from '@playwright/test';
 
+test('visitor can switch and persist light, dark, and system themes', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  await page.getByLabel(/Tema:/).click();
+  await page.getByRole('button', { name: 'Terang' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+
+  const lightAppearance = await page.evaluate(() => {
+    function luminance(color: string) {
+      const channels = color.match(/\d+(?:\.\d+)?/g)?.slice(0, 3).map(Number) ?? [];
+      const linear = channels.map((channel) => {
+        const value = channel / 255;
+        return value <= 0.04045
+          ? value / 12.92
+          : ((value + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+    }
+    function ratio(foreground: string, background: string) {
+      const lighter = Math.max(luminance(foreground), luminance(background));
+      const darker = Math.min(luminance(foreground), luminance(background));
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    const section = document.querySelector<HTMLElement>(
+      '[data-section="learning-benefits"]',
+    );
+    const heading = section?.querySelector<HTMLElement>('h2');
+    const badge = document.querySelector<HTMLElement>(
+      '[data-testid="daily-step-badge"]',
+    );
+    if (!section || !heading || !badge) {
+      return { sectionLuminance: 0, heading: 0, badge: 0 };
+    }
+
+    return {
+      sectionLuminance: luminance(getComputedStyle(section).backgroundColor),
+      heading: ratio(
+        getComputedStyle(heading).color,
+        getComputedStyle(section).backgroundColor,
+      ),
+      badge: ratio(
+        getComputedStyle(badge).color,
+        getComputedStyle(badge).backgroundColor,
+      ),
+    };
+  });
+  expect(lightAppearance.sectionLuminance).toBeGreaterThan(0.7);
+  expect(lightAppearance.heading).toBeGreaterThanOrEqual(7);
+  expect(lightAppearance.badge).toBeGreaterThanOrEqual(4.5);
+
+  await page.getByLabel('Tema: Terang').click();
+  await page.getByRole('button', { name: 'Gelap' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+  const contrast = await page
+    .locator('[data-section="learning-benefits"]')
+    .evaluate((section) => {
+      function luminance(color: string) {
+        const channels = color.match(/\d+(?:\.\d+)?/g)?.slice(0, 3).map(Number) ?? [];
+        const linear = channels.map((channel) => {
+          const value = channel / 255;
+          return value <= 0.04045
+            ? value / 12.92
+            : ((value + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+      }
+      function ratio(foreground: string, background: string) {
+        const lighter = Math.max(luminance(foreground), luminance(background));
+        const darker = Math.min(luminance(foreground), luminance(background));
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+
+      const heading = section.querySelector('h2');
+      const card = section.querySelector('article');
+      const body = card?.querySelector('p');
+      if (!heading || !card || !body) return { heading: 0, body: 0 };
+      return {
+        heading: ratio(
+          getComputedStyle(heading).color,
+          getComputedStyle(section).backgroundColor,
+        ),
+        body: ratio(
+          getComputedStyle(body).color,
+          getComputedStyle(card).backgroundColor,
+        ),
+      };
+    });
+  expect(contrast.heading).toBeGreaterThanOrEqual(7);
+  expect(contrast.body).toBeGreaterThanOrEqual(4.5);
+
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+  await page.getByLabel('Tema: Gelap').click();
+  await page.getByRole('button', { name: 'Sistem' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'system');
+});
+
 test('learner can open the N5 catalog and a material detail', async ({ page }) => {
   await page.goto('/');
 
@@ -34,12 +136,13 @@ test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async
   await page.goto('/catalog?level=N5&type=vocabulary');
 
   await page.getByText('Filter vocabulary').click();
+  const taxonomyForm = page
+    .locator('form')
+    .filter({ has: page.locator('[name="pos"]') });
   await page.getByLabel('Kelas kata').selectOption('verb');
   await page.getByLabel('Kelompok verba').selectOption('ichidan');
-  await page.getByLabel('Tema').selectOption('food_drink');
-  await page
-    .locator('form')
-    .filter({ has: page.locator('[name="pos"]') })
+  await taxonomyForm.locator('select[name="theme"]').selectOption('food_drink');
+  await taxonomyForm
     .getByRole('button', { name: 'Terapkan' })
     .click();
 

@@ -42,6 +42,11 @@ tercatat di remote sebagai `20260727114014_add_filtered_learning_candidates`.
 - Halaman `/settings` untuk nama, URL avatar, locale materi, locale antarmuka,
   target JLPT, target harian, serta tema light/dark/system.
 - Tema tersimpan diterapkan pada layout aplikasi.
+- Switcher tema Terang, Gelap, dan Sistem tersedia di header publik, sidebar,
+  serta header mobile. Preferensi tamu disimpan di browser, preferensi pengguna
+  login disimpan ke profil, dan bootstrap sebelum hydration mencegah flash tema.
+- Section landing “Dibuat untuk benar-benar belajar” kini terang di mode Light dan
+  gelap di mode Dark; kontras heading, body, serta badge `毎日、一歩ずつ` diuji otomatis.
 - Ekspor data akun sebagai JSON, meliputi profil, role, progres, sesi, attempt,
   dan laporan.
 - Penghapusan akun mandiri dengan konfirmasi eksplisit. Penghapusan `auth.users`
@@ -144,10 +149,10 @@ Hasil pemeriksaan terakhir:
 
 - ESLint lulus tanpa warning.
 - TypeScript strict type-check lulus.
-- 60 unit/component/schema test lulus.
+- 63 unit/component/schema test lulus.
 - 4 integration test berbasis credential tersedia dan otomatis skip jika akun
   fixture belum dikonfigurasi.
-- 12 Playwright E2E publik lulus, termasuk filter taxonomy N5.
+- 13 Playwright E2E publik lulus, termasuk filter taxonomy N5 dan persistensi tema.
 - 7 authenticated/role E2E tersedia dan otomatis skip jika password akun fixture
   belum dikonfigurasi.
 - Production build Next.js lulus untuk 25 route.

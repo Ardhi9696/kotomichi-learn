@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation';
 import {
   deleteAccountSchema,
   profileSchema,
+  themePreferenceSchema,
+  type ThemePreference,
 } from '@/features/settings/profile-schema';
 import { requireUser } from '@/lib/auth/require-user';
 
@@ -50,6 +52,26 @@ export async function updateProfile(formData: FormData): Promise<never> {
 
   revalidatePath('/', 'layout');
   settingsRedirect('message', 'Pengaturan akun berhasil disimpan.');
+}
+
+export async function saveThemePreference(
+  rawTheme: ThemePreference,
+): Promise<{ success: boolean }> {
+  const result = themePreferenceSchema.safeParse(rawTheme);
+  if (!result.success) return { success: false };
+
+  const { supabase, user } = await requireUser();
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      theme: result.data,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', user.id);
+
+  if (error) return { success: false };
+  revalidatePath('/', 'layout');
+  return { success: true };
 }
 
 export async function deleteAccount(formData: FormData): Promise<never> {

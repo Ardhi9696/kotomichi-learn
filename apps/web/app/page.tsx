@@ -89,7 +89,10 @@ export default function HomePage() {
 
           <div className="reveal-late relative mx-auto aspect-square w-full max-w-[520px]">
             <div className="sun-disc absolute inset-[10%] rounded-full" />
-            <div className="absolute top-[8%] right-[3%] rounded-full border border-white/30 bg-white/16 px-4 py-2 text-xs font-semibold text-white backdrop-blur">
+            <div
+              className="absolute top-[8%] right-[3%] rounded-full border border-overlay-border bg-overlay px-4 py-2 text-xs font-semibold text-overlay-foreground shadow-sm"
+              data-testid="daily-step-badge"
+            >
               毎日、一歩ずつ
             </div>
             <div className="absolute inset-0 grid place-items-center text-white">
@@ -157,7 +160,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-foreground text-background">
+      <section
+        className="border-y border-inverse-border bg-inverse text-inverse-foreground"
+        data-section="learning-benefits"
+      >
         <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
           <div className="max-w-2xl">
             <p className="text-xs font-bold tracking-[0.22em] text-accent uppercase">
@@ -167,12 +173,14 @@ export default function HomePage() {
               Lebih sedikit distraksi, lebih banyak pemahaman.
             </h2>
           </div>
-          <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-white/15 bg-white/15 md:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-inverse-border bg-inverse-border md:grid-cols-3">
             {features.map((feature) => (
-              <article className="bg-foreground p-7 sm:p-9" key={feature.number}>
+              <article className="bg-inverse-surface p-7 sm:p-9" key={feature.number}>
                 <span className="text-sm font-bold text-accent">{feature.number}</span>
                 <h3 className="mt-10 text-xl font-semibold">{feature.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-background/65">{feature.body}</p>
+                <p className="mt-3 text-sm leading-7 text-inverse-muted">
+                  {feature.body}
+                </p>
               </article>
             ))}
           </div>

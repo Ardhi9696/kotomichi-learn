@@ -8,6 +8,8 @@ import { logout } from '@/app/auth/actions';
 import { BrandMark } from '@/components/brand-mark';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { ThemeSwitcher } from '@/components/theme-switcher';
+import type { ThemePreference } from '@/features/settings/profile-schema';
 
 type AppRole = 'editor' | 'reviewer' | 'admin' | 'superadmin';
 
@@ -15,6 +17,7 @@ export type AppViewer = {
   displayName: string;
   email: string;
   targetLevel: string;
+  theme: ThemePreference;
   roles: AppRole[];
 };
 
@@ -373,6 +376,10 @@ function SidebarContent({
               </button>
             </form>
           </div>
+          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+            <span className="text-xs font-semibold text-muted-foreground">Tema</span>
+            <ThemeSwitcher initialTheme={viewer.theme} persist />
+          </div>
         </div>
       </div>
     </>
@@ -381,9 +388,11 @@ function SidebarContent({
 
 export function AppShell({
   children,
+  initialTheme = 'system',
   viewer,
 }: {
   children: React.ReactNode;
+  initialTheme?: ThemePreference;
   viewer: AppViewer | null;
 }) {
   const pathname = usePathname();
@@ -454,7 +463,10 @@ export function AppShell({
   if (!isAppRoute || !viewer) {
     return (
       <>
-        <SiteHeader isAuthenticated={Boolean(viewer)} />
+        <SiteHeader
+          initialTheme={viewer?.theme ?? initialTheme}
+          isAuthenticated={Boolean(viewer)}
+        />
         <main id="main-content">{children}</main>
         <SiteFooter />
       </>
@@ -491,13 +503,16 @@ export function AppShell({
             </svg>
           </button>
           <span className="text-sm font-semibold">{pageLabel}</span>
-          <Link
-            aria-label="Buka pengaturan"
-            className="grid size-10 place-items-center rounded-xl bg-primary-soft text-xs font-bold text-primary"
-            href="/settings"
-          >
-            {viewer.displayName.slice(0, 1).toUpperCase()}
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeSwitcher initialTheme={viewer.theme} persist />
+            <Link
+              aria-label="Buka pengaturan"
+              className="grid size-10 place-items-center rounded-xl bg-primary-soft text-xs font-bold text-primary"
+              href="/settings"
+            >
+              {viewer.displayName.slice(0, 1).toUpperCase()}
+            </Link>
+          </div>
         </header>
 
         {mobileOpen ? (

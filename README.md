@@ -21,6 +21,8 @@ dari OpenJLPT dan disajikan melalui Supabase; dataset tidak disimpan di reposito
 - Navigasi akun responsif dengan sidebar desktop dan drawer mobile berbasis role.
 - Workspace translation Indonesia/Korea dengan review dan audit revisi.
 - Pengaturan profil, locale, target, tema, ekspor, dan penghapusan akun.
+- Switcher tema Terang/Gelap/Sistem tersedia di header publik dan app shell,
+  diterapkan sebelum paint serta mengikuti preferensi warna perangkat.
 - Panel sinkronisasi snapshot OpenJLPT untuk superadmin.
 - Atribusi dan informasi lisensi sumber materi.
 
