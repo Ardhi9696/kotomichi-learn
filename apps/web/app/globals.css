@@ -1,0 +1,129 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-primary: var(--theme-primary);
+  --color-primary-hover: var(--theme-primary-hover);
+  --color-primary-soft: var(--theme-primary-soft);
+  --color-foreground: var(--theme-foreground);
+  --color-muted-foreground: var(--theme-muted-foreground);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
+  --color-border: var(--theme-border);
+  --color-accent: var(--theme-accent);
+  --font-sans: var(--font-jakarta), var(--font-noto-sans-jp), system-ui, sans-serif;
+  --font-serif: var(--font-noto-serif-jp), 'Yu Mincho', serif;
+  --shadow-card: 0 18px 60px rgb(46 37 32 / 7%);
+}
+
+:root {
+  --theme-primary: #c92c23;
+  --theme-primary-hover: #a9231c;
+  --theme-primary-soft: #fbe9e7;
+  --theme-foreground: #1c1c1c;
+  --theme-muted-foreground: #6b6762;
+  --theme-background: #f7f6f0;
+  --theme-surface: #ffffff;
+  --theme-border: #e6e1d8;
+  --theme-accent: #d4af37;
+}
+
+* {
+  border-color: var(--theme-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--theme-background);
+  color: var(--theme-foreground);
+  font-family: var(--font-jakarta), var(--font-noto-sans-jp), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+::selection {
+  background: var(--theme-primary-soft);
+  color: var(--theme-primary-hover);
+}
+
+a,
+button,
+input,
+select {
+  outline-color: var(--theme-primary);
+  outline-offset: 3px;
+}
+
+.paper-grid {
+  background-image:
+    linear-gradient(rgb(201 44 35 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(201 44 35 / 4%) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.sun-disc {
+  background:
+    radial-gradient(circle at 35% 30%, rgb(255 255 255 / 26%), transparent 25%),
+    var(--theme-primary);
+  box-shadow: 0 30px 80px rgb(201 44 35 / 24%);
+}
+
+.torii {
+  position: relative;
+  width: 138px;
+  height: 112px;
+}
+
+.torii::before,
+.torii::after {
+  position: absolute;
+  content: '';
+  background: currentColor;
+}
+
+.torii::before {
+  top: 20px;
+  left: 24px;
+  width: 90px;
+  height: 10px;
+  box-shadow:
+    -12px -17px 0 3px currentColor,
+    12px -17px 0 3px currentColor;
+}
+
+.torii::after {
+  top: 30px;
+  left: 32px;
+  width: 9px;
+  height: 82px;
+  box-shadow: 65px 0 0 currentColor;
+}
+
+.vertical-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal 600ms ease-out both;
+  }
+
+  .reveal-late {
+    animation: reveal 700ms 120ms ease-out both;
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

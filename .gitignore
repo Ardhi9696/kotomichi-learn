@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.next/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.cache/
+*.log
+.DS_Store
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Local application environment
+.env
+.env.*
+!.env.example
+
+# Local database exports and source snapshots
+supabase/.temp/
+supabase/dumps/

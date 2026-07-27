@@ -1,0 +1,932 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
+  public: {
+    Tables: {
+      content_items: {
+        Row: {
+          character: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at: string
+          current_snapshot_id: string | null
+          current_source_fingerprint: string | null
+          first_seen_snapshot_id: string
+          id: string
+          identity_key: string
+          is_active: boolean
+          last_seen_snapshot_id: string
+          level: Database["public"]["Enums"]["jlpt_level"]
+          pattern: string | null
+          reading: string | null
+          updated_at: string
+          word: string | null
+        }
+        Insert: {
+          character?: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          current_snapshot_id?: string | null
+          current_source_fingerprint?: string | null
+          first_seen_snapshot_id: string
+          id?: string
+          identity_key: string
+          is_active?: boolean
+          last_seen_snapshot_id: string
+          level: Database["public"]["Enums"]["jlpt_level"]
+          pattern?: string | null
+          reading?: string | null
+          updated_at?: string
+          word?: string | null
+        }
+        Update: {
+          character?: string | null
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          current_snapshot_id?: string | null
+          current_source_fingerprint?: string | null
+          first_seen_snapshot_id?: string
+          id?: string
+          identity_key?: string
+          is_active?: boolean
+          last_seen_snapshot_id?: string
+          level?: Database["public"]["Enums"]["jlpt_level"]
+          pattern?: string | null
+          reading?: string | null
+          updated_at?: string
+          word?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_items_current_snapshot_id_fkey"
+            columns: ["current_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_first_seen_snapshot_id_fkey"
+            columns: ["first_seen_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_last_seen_snapshot_id_fkey"
+            columns: ["last_seen_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_reports: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          field_name: string
+          id: string
+          locale: string
+          message: string
+          reporter_id: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          updated_at: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          field_name: string
+          id?: string
+          locale: string
+          message: string
+          reporter_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          updated_at?: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          field_name?: string
+          id?: string
+          locale?: string
+          message?: string
+          reporter_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_reports_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grammar: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          examples: Json
+          formation: string
+          id: string
+          meaning: string
+          notes: string
+          pattern: string
+          snapshot_id: string
+          source_fingerprint: string
+          tags: string[]
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          examples?: Json
+          formation?: string
+          id?: string
+          meaning: string
+          notes?: string
+          pattern: string
+          snapshot_id: string
+          source_fingerprint: string
+          tags?: string[]
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          examples?: Json
+          formation?: string
+          id?: string
+          meaning?: string
+          notes?: string
+          pattern?: string
+          snapshot_id?: string
+          source_fingerprint?: string
+          tags?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grammar_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grammar_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grammar_translations: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          editor_id: string | null
+          examples: Json
+          formation: string
+          id: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meaning: string
+          notes: string
+          published_at: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewer_id: string | null
+          source_fingerprint: string
+          status: Database["public"]["Enums"]["translation_status"]
+          tags: string[]
+          updated_at: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          editor_id?: string | null
+          examples?: Json
+          formation?: string
+          id?: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meaning: string
+          notes?: string
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          tags?: string[]
+          updated_at?: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          editor_id?: string | null
+          examples?: Json
+          formation?: string
+          id?: string
+          locale?: Database["public"]["Enums"]["translation_locale"]
+          meaning?: string
+          notes?: string
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint?: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          tags?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grammar_translations_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kanji: {
+        Row: {
+          character: string
+          content_item_id: string
+          created_at: string
+          frequency: number | null
+          grade: number | null
+          id: string
+          kunyomi: string[]
+          meanings: string[]
+          onyomi: string[]
+          snapshot_id: string
+          source_fingerprint: string
+          strokes: number | null
+        }
+        Insert: {
+          character: string
+          content_item_id: string
+          created_at?: string
+          frequency?: number | null
+          grade?: number | null
+          id?: string
+          kunyomi?: string[]
+          meanings?: string[]
+          onyomi?: string[]
+          snapshot_id: string
+          source_fingerprint: string
+          strokes?: number | null
+        }
+        Update: {
+          character?: string
+          content_item_id?: string
+          created_at?: string
+          frequency?: number | null
+          grade?: number | null
+          id?: string
+          kunyomi?: string[]
+          meanings?: string[]
+          onyomi?: string[]
+          snapshot_id?: string
+          source_fingerprint?: string
+          strokes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanji_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kanji_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kanji_translations: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          editor_id: string | null
+          id: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meanings: string[]
+          published_at: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewer_id: string | null
+          source_fingerprint: string
+          status: Database["public"]["Enums"]["translation_status"]
+          updated_at: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          editor_id?: string | null
+          id?: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meanings: string[]
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          updated_at?: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          editor_id?: string | null
+          id?: string
+          locale?: Database["public"]["Enums"]["translation_locale"]
+          meanings?: string[]
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint?: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanji_translations_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_progress: {
+        Row: {
+          attempts_count: number
+          content_item_id: string
+          correct_count: number
+          created_at: string
+          ease_factor: number
+          id: string
+          interval_days: number
+          last_rating: Database["public"]["Enums"]["review_rating"] | null
+          last_reviewed_at: string | null
+          mastered_at: string | null
+          next_review_at: string | null
+          review_count: number
+          status: Database["public"]["Enums"]["learning_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts_count?: number
+          content_item_id: string
+          correct_count?: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_rating?: Database["public"]["Enums"]["review_rating"] | null
+          last_reviewed_at?: string | null
+          mastered_at?: string | null
+          next_review_at?: string | null
+          review_count?: number
+          status?: Database["public"]["Enums"]["learning_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts_count?: number
+          content_item_id?: string
+          correct_count?: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_rating?: Database["public"]["Enums"]["review_rating"] | null
+          last_reviewed_at?: string | null
+          mastered_at?: string | null
+          next_review_at?: string | null
+          review_count?: number
+          status?: Database["public"]["Enums"]["learning_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_progress_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_sessions: {
+        Row: {
+          completed_at: string | null
+          completed_item_count: number
+          content_types: Database["public"]["Enums"]["content_type"][]
+          correct_item_count: number
+          created_at: string
+          id: string
+          level: Database["public"]["Enums"]["jlpt_level"]
+          started_at: string
+          target_item_count: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_item_count?: number
+          content_types: Database["public"]["Enums"]["content_type"][]
+          correct_item_count?: number
+          created_at?: string
+          id?: string
+          level: Database["public"]["Enums"]["jlpt_level"]
+          started_at?: string
+          target_item_count: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_item_count?: number
+          content_types?: Database["public"]["Enums"]["content_type"][]
+          correct_item_count?: number
+          created_at?: string
+          id?: string
+          level?: Database["public"]["Enums"]["jlpt_level"]
+          started_at?: string
+          target_item_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          content_locale: string
+          created_at: string
+          daily_goal: number
+          display_name: string | null
+          id: string
+          interface_locale: string
+          onboarding_completed_at: string | null
+          target_level: Database["public"]["Enums"]["jlpt_level"]
+          theme: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          content_locale?: string
+          created_at?: string
+          daily_goal?: number
+          display_name?: string | null
+          id: string
+          interface_locale?: string
+          onboarding_completed_at?: string | null
+          target_level?: Database["public"]["Enums"]["jlpt_level"]
+          theme?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          content_locale?: string
+          created_at?: string
+          daily_goal?: number
+          display_name?: string | null
+          id?: string
+          interface_locale?: string
+          onboarding_completed_at?: string | null
+          target_level?: Database["public"]["Enums"]["jlpt_level"]
+          theme?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          answered_at: string
+          client_attempt_id: string
+          content_item_id: string
+          created_at: string
+          id: string
+          is_correct: boolean
+          question_type: string
+          rating: Database["public"]["Enums"]["review_rating"] | null
+          response_time_ms: number | null
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string
+          client_attempt_id: string
+          content_item_id: string
+          created_at?: string
+          id?: string
+          is_correct: boolean
+          question_type: string
+          rating?: Database["public"]["Enums"]["review_rating"] | null
+          response_time_ms?: number | null
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          answered_at?: string
+          client_attempt_id?: string
+          content_item_id?: string
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          question_type?: string
+          rating?: Database["public"]["Enums"]["review_rating"] | null
+          response_time_ms?: number | null
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_attempts_session_user_fk"
+            columns: ["session_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "learning_sessions"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      source_snapshots: {
+        Row: {
+          activated_at: string | null
+          created_at: string
+          dataset_checksum: string
+          id: string
+          imported_at: string
+          item_counts: Json
+          license: string
+          source_commit: string | null
+          source_name: string
+          source_url: string
+          source_version: string
+          status: Database["public"]["Enums"]["snapshot_status"]
+          validated_at: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          created_at?: string
+          dataset_checksum: string
+          id?: string
+          imported_at?: string
+          item_counts?: Json
+          license?: string
+          source_commit?: string | null
+          source_name?: string
+          source_url?: string
+          source_version: string
+          status?: Database["public"]["Enums"]["snapshot_status"]
+          validated_at?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          created_at?: string
+          dataset_checksum?: string
+          id?: string
+          imported_at?: string
+          item_counts?: Json
+          license?: string
+          source_commit?: string | null
+          source_name?: string
+          source_url?: string
+          source_version?: string
+          status?: Database["public"]["Enums"]["snapshot_status"]
+          validated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vocab: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          examples: Json
+          id: string
+          meanings: string[]
+          reading: string
+          snapshot_id: string
+          source_fingerprint: string
+          word: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          examples?: Json
+          id?: string
+          meanings: string[]
+          reading?: string
+          snapshot_id: string
+          source_fingerprint: string
+          word: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          examples?: Json
+          id?: string
+          meanings?: string[]
+          reading?: string
+          snapshot_id?: string
+          source_fingerprint?: string
+          word?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocab_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocab_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocab_translations: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          editor_id: string | null
+          examples: Json
+          id: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meanings: string[]
+          published_at: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewer_id: string | null
+          source_fingerprint: string
+          status: Database["public"]["Enums"]["translation_status"]
+          updated_at: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          editor_id?: string | null
+          examples?: Json
+          id?: string
+          locale: Database["public"]["Enums"]["translation_locale"]
+          meanings: string[]
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          updated_at?: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          editor_id?: string | null
+          examples?: Json
+          id?: string
+          locale?: Database["public"]["Enums"]["translation_locale"]
+          meanings?: string[]
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          source_fingerprint?: string
+          status?: Database["public"]["Enums"]["translation_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocab_translations_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      app_role: "editor" | "reviewer" | "admin"
+      content_type: "vocabulary" | "kanji" | "grammar"
+      jlpt_level: "N5" | "N4" | "N3" | "N2" | "N1"
+      learning_status: "new" | "learning" | "review" | "mastered"
+      report_status: "open" | "triaged" | "resolved" | "rejected"
+      review_rating: "forgot" | "hard" | "good" | "easy"
+      snapshot_status:
+        | "importing"
+        | "validated"
+        | "active"
+        | "archived"
+        | "failed"
+      translation_locale: "id" | "ko"
+      translation_status: "draft" | "reviewed" | "published" | "needs_review"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["editor", "reviewer", "admin"],
+      content_type: ["vocabulary", "kanji", "grammar"],
+      jlpt_level: ["N5", "N4", "N3", "N2", "N1"],
+      learning_status: ["new", "learning", "review", "mastered"],
+      report_status: ["open", "triaged", "resolved", "rejected"],
+      review_rating: ["forgot", "hard", "good", "easy"],
+      snapshot_status: [
+        "importing",
+        "validated",
+        "active",
+        "archived",
+        "failed",
+      ],
+      translation_locale: ["id", "ko"],
+      translation_status: ["draft", "reviewed", "published", "needs_review"],
+    },
+  },
+} as const

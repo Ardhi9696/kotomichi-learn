@@ -1,0 +1,42 @@
+{
+  "name": "kotomichi-learn",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web belajar JLPT N5–N1 dengan materi OpenJLPT yang disajikan melalui Supabase.",
+  "keywords": [
+    "jlpt",
+    "japanese",
+    "japanese-language",
+    "kanji",
+    "vocabulary",
+    "n5",
+    "n4",
+    "n3",
+    "n2",
+    "n1",
+    "language-learning",
+    "flashcards",
+    "kotomichi"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @kotomichi/web",
+    "build": "npm run build -w @kotomichi/web",
+    "dev:web": "npm run dev -w @kotomichi/web",
+    "build:web": "npm run build -w @kotomichi/web",
+    "lint": "npm run lint -w @kotomichi/web",
+    "typecheck": "npm run typecheck -w @kotomichi/web",
+    "test": "npm run test -w @kotomichi/web",
+    "test:e2e": "npm run test:e2e -w @kotomichi/web"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

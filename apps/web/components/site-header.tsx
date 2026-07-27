@@ -1,0 +1,75 @@
+import Link from 'next/link';
+
+import { BrandMark } from '@/components/brand-mark';
+
+const navigation = [
+  { href: '/catalog', label: 'Materi' },
+  { href: '/catalog?level=N5&type=vocabulary', label: 'Kosakata' },
+  { href: '/catalog?level=N5&type=kanji', label: 'Kanji' },
+  { href: '/catalog?level=N5&type=grammar', label: 'Grammar' },
+  { href: '/dashboard', label: 'Dashboard' },
+] as const;
+
+export function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/92 backdrop-blur-xl">
+      <div className="mx-auto flex min-h-18 max-w-7xl items-center gap-5 px-5 sm:px-8">
+        <Link
+          className="flex shrink-0 items-center gap-3 rounded-lg font-semibold tracking-tight focus-visible:outline-2"
+          href="/"
+        >
+          <BrandMark />
+          <span>Kotomichi</span>
+          <span className="hidden text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase sm:inline">
+            Learn
+          </span>
+        </Link>
+
+        <nav
+          aria-label="Navigasi utama"
+          className="ml-auto hidden items-center gap-1 lg:flex"
+        >
+          {navigation.map((item) => (
+            <Link
+              className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-surface hover:text-foreground focus-visible:outline-2"
+              href={item.href}
+              key={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-2 lg:ml-4">
+          <Link
+            className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-surface hover:text-primary focus-visible:outline-2 sm:inline-flex"
+            href="/auth/login"
+          >
+            Masuk
+          </Link>
+          <Link
+            className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover focus-visible:outline-2"
+            href="/dashboard"
+          >
+            Akun saya
+          </Link>
+        </div>
+      </div>
+
+      <nav
+        aria-label="Navigasi materi"
+        className="flex gap-1 overflow-x-auto border-t border-border/60 px-4 py-2 lg:hidden"
+      >
+        {navigation.map((item) => (
+          <Link
+            className="shrink-0 rounded-full px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-surface hover:text-foreground"
+            href={item.href}
+            key={item.href}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+    </header>
+  );
+}
