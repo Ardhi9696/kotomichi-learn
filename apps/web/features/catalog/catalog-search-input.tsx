@@ -8,7 +8,7 @@ export function CatalogSearchInput({ defaultValue = '' }: { defaultValue?: strin
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(defaultValue);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
