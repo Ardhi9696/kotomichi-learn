@@ -15,11 +15,11 @@ vi.mock('next/navigation', () => ({
   usePathname: () => currentPathname,
 }));
 
-vi.mock('@/app/auth/actions', () => ({
+vi.mock('@/lib/auth/actions', () => ({
   logout: vi.fn(),
 }));
 
-vi.mock('@/app/settings/actions', () => ({
+vi.mock('@/features/settings/actions', () => ({
   saveThemePreference: vi.fn(async () => ({ success: true })),
 }));
 
@@ -89,16 +89,15 @@ describe('AppShell', () => {
     });
   });
 
-  it('keeps the public header and footer outside authenticated app routes', () => {
-    currentPathname = '/';
+  it('renders authenticated content through the navigation client island', () => {
+    currentPathname = '/dashboard';
     render(
-      <AppShell viewer={null}>
-        <h1>Landing</h1>
+      <AppShell viewer={learner}>
+        <h1>Dashboard</h1>
       </AppShell>,
     );
 
-    expect(screen.getByRole('navigation', { name: 'Navigasi utama' })).toBeVisible();
-    expect(screen.getByLabelText('Tema: Sistem')).toBeVisible();
-    expect(screen.getByText('Kotomichi Learn')).toBeVisible();
+    expect(screen.getByRole('navigation', { name: 'Navigasi dashboard' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
   });
 });

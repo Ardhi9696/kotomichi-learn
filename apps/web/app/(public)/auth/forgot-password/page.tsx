@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { requestPasswordReset } from '@/app/auth/actions';
+import { requestPasswordReset } from '@/lib/auth/actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { AuthShell } from '@/components/auth/auth-shell';
 import { SubmitButton } from '@/components/auth/submit-button';

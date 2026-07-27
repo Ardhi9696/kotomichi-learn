@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import {
@@ -102,6 +102,8 @@ export async function saveEditorialContent(formData: FormData): Promise<never> {
 
   revalidatePath('/catalog');
   revalidatePath(`/catalog/${contentItemId}`);
+  revalidateTag('catalog', 'max');
+  revalidateTag(`content:${contentItemId}`, 'max');
   revalidatePath('/editor');
   redirect(
     `/editor/${contentItemId}?message=${encodeURIComponent(
@@ -128,6 +130,8 @@ export async function setContentActive(formData: FormData): Promise<never> {
 
   revalidatePath('/catalog');
   revalidatePath(`/catalog/${result.data.contentItemId}`);
+  revalidateTag('catalog', 'max');
+  revalidateTag(`content:${result.data.contentItemId}`, 'max');
   revalidatePath('/editor');
   redirect(
     `/editor?message=${encodeURIComponent(

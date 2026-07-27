@@ -2,7 +2,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import {
@@ -130,6 +130,8 @@ export async function saveTranslationDraft(formData: FormData): Promise<never> {
   }
   revalidatePath('/translations');
   revalidatePath(`/catalog/${result.data.contentItemId}`);
+  revalidateTag('catalog', 'max');
+  revalidateTag(`content:${result.data.contentItemId}`, 'max');
   redirect(
     translationPath(
       result.data.contentItemId,

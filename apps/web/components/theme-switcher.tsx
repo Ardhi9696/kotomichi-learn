@@ -2,7 +2,7 @@
 
 import { useRef, useState, useSyncExternalStore, useTransition } from 'react';
 
-import { saveThemePreference } from '@/app/settings/actions';
+import { saveThemePreference } from '@/features/settings/actions';
 import type { ThemePreference } from '@/features/settings/profile-schema';
 import {
   applyThemePreference,

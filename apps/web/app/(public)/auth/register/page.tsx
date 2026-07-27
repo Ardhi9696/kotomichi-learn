@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { register } from '@/app/auth/actions';
+import { register } from '@/lib/auth/actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { AuthShell } from '@/components/auth/auth-shell';
 import { GoogleAuthForm } from '@/components/auth/google-auth-form';

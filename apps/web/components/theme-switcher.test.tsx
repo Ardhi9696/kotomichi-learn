@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ThemePreferenceSelect } from '@/components/theme-preference-select';
 import { ThemeSwitcher } from '@/components/theme-switcher';
-import { saveThemePreference } from '@/app/settings/actions';
+import { saveThemePreference } from '@/features/settings/actions';
 
-vi.mock('@/app/settings/actions', () => ({
+vi.mock('@/features/settings/actions', () => ({
   saveThemePreference: vi.fn(async () => ({ success: true })),
 }));
 

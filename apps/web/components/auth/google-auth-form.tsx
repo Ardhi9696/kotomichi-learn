@@ -1,4 +1,4 @@
-import { signInWithGoogle } from '@/app/auth/actions';
+import { signInWithGoogle } from '@/lib/auth/actions';
 
 function GoogleMark() {
   return (

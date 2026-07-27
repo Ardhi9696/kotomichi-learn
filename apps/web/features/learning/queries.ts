@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { getContentDetail } from '@/features/catalog/queries';
+import { getContentDetail, getContentDetailsBatch } from '@/features/catalog/queries';
 import { isLocale, type ContentDetail, type Locale } from '@/features/catalog/types';
 import { learningSessionIdSchema } from '@/features/learning/session-schema';
 import {
@@ -74,7 +74,8 @@ async function getDistractorDetails(
     .limit(20);
 
   if (error) throw new Error('Pilihan jawaban belum dapat dimuat.');
-  return Promise.all(data.map((item) => getContentDetail(item.id, locale)));
+  const ids = data.map((item) => item.id);
+  return getContentDetailsBatch(ids, locale);
 }
 
 export async function getLearningHomeData(): Promise<LearningHomeData> {
