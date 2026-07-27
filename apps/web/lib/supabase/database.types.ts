@@ -1065,6 +1065,19 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_dashboard_summary: {
+        Args: { p_target_level: string }
+        Returns: {
+          mastered_count: number
+          learning_count: number
+          new_count: number
+          due_count: number
+          total_attempts: number
+          total_correct: number
+          total_items: number
+          content_breakdown: Json
+        }[]
+      }
       get_learning_activity: {
         Args: { p_timezone?: string }
         Returns: {

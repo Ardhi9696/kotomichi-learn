@@ -1,19 +1,12 @@
 import { redirect } from 'next/navigation';
 
+import type { Enums, Tables } from '@/lib/supabase/database.types';
+import { requireUser } from '@/lib/auth/require-user';
 import {
   buildDashboardStats,
   type DailyActivity,
   type LearningActivityRow,
 } from '@/features/dashboard/dashboard-stats';
-import { requireUser } from '@/lib/auth/require-user';
-import type { Enums, Tables } from '@/lib/supabase/database.types';
-
-type ProgressRow = Pick<
-  Tables<'learning_progress'>,
-  'status' | 'attempts_count' | 'correct_count' | 'next_review_at'
-> & {
-  content_items: Pick<Tables<'content_items'>, 'content_type'>;
-};
 
 const TARGET_TOTALS: Record<Enums<'jlpt_level'>, number> = {
   N5: 761,
@@ -21,6 +14,21 @@ const TARGET_TOTALS: Record<Enums<'jlpt_level'>, number> = {
   N3: 2171,
   N2: 2180,
   N1: 4715,
+};
+
+type DashboardSummaryRow = {
+  mastered_count: number;
+  learning_count: number;
+  new_count: number;
+  due_count: number;
+  total_attempts: number;
+  total_correct: number;
+  total_items: number;
+  content_breakdown: {
+    content_type: Enums<'content_type'>;
+    learned: number;
+    mastered: number;
+  }[];
 };
 
 export type DashboardData = {
@@ -66,24 +74,21 @@ export async function getDashboardData(): Promise<DashboardData> {
   const { supabase, user } = await requireUser();
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select(
-      'display_name,target_level,content_locale,daily_goal,onboarding_completed_at',
-    )
+    .select('display_name,target_level,content_locale,daily_goal,onboarding_completed_at')
     .eq('id', user.id)
     .maybeSingle();
 
   if (profileError) throw new Error('Profil belum dapat dimuat.');
   if (!profile?.onboarding_completed_at) redirect('/onboarding');
 
-  const [progressResult, sessionsResult, activityResult] =
-    await Promise.all([
-    supabase
-      .from('learning_progress')
-      .select(
-        'status,attempts_count,correct_count,next_review_at,content_items!inner(level,content_type)',
-      )
-      .eq('user_id', user.id)
-      .eq('content_items.level', profile.target_level),
+  const [
+    summaryResult,
+    sessionsResult,
+    activityResult,
+  ] = await Promise.all([
+    supabase.rpc('get_dashboard_summary', {
+      p_target_level: profile.target_level,
+    }),
     supabase
       .from('learning_sessions')
       .select(
@@ -96,32 +101,23 @@ export async function getDashboardData(): Promise<DashboardData> {
     supabase.rpc('get_learning_activity', { p_timezone: 'Asia/Jakarta' }),
   ]);
 
-  if (
-    progressResult.error ||
-    sessionsResult.error ||
-    activityResult.error
-  ) {
+  if (summaryResult.error || sessionsResult.error || activityResult.error) {
     throw new Error('Ringkasan belajar belum dapat dimuat.');
   }
 
-  const progressRows: ProgressRow[] = progressResult.data ?? [];
-  const now = Date.now();
-  const masteredItems = progressRows.filter((row) => row.status === 'mastered').length;
-  const learningItems = progressRows.filter((row) => row.status !== 'new').length;
-  const dueItems = progressRows.filter(
-    (row) =>
-      row.next_review_at !== null &&
-      new Date(row.next_review_at).getTime() <= now &&
-      (row.status === 'learning' || row.status === 'review'),
-  ).length;
-  const attempts = progressRows.reduce((total, row) => total + row.attempts_count, 0);
-  const correct = progressRows.reduce((total, row) => total + row.correct_count, 0);
-  const totalItems = TARGET_TOTALS[profile.target_level];
+  const summary: DashboardSummaryRow | undefined =
+    (summaryResult.data?.[0] as DashboardSummaryRow | undefined) ?? undefined;
+  const masteredItems = summary?.mastered_count ?? 0;
+  const learningItems = summary?.learning_count ?? 0;
+  const dueItems = summary?.due_count ?? 0;
+  const attempts = summary?.total_attempts ?? 0;
+  const correct = summary?.total_correct ?? 0;
+  const totalItems = summary?.total_items ?? TARGET_TOTALS[profile.target_level];
+
   const advancedStats = buildDashboardStats(
     (activityResult.data ?? []) as LearningActivityRow[],
     profile.daily_goal,
   );
-  const contentTypes: Enums<'content_type'>[] = ['vocabulary', 'kanji', 'grammar'];
 
   return {
     userId: user.id,
@@ -138,16 +134,11 @@ export async function getDashboardData(): Promise<DashboardData> {
     accuracy: attempts > 0 ? Math.round((correct / attempts) * 100) : 0,
     completion: Math.min(100, Math.round((masteredItems / totalItems) * 100)),
     ...advancedStats,
-    contentBreakdown: contentTypes.map((contentType) => {
-      const rows = progressRows.filter(
-        (row) => row.content_items.content_type === contentType,
-      );
-      return {
-        contentType,
-        learned: rows.filter((row) => row.status !== 'new').length,
-        mastered: rows.filter((row) => row.status === 'mastered').length,
-      };
-    }),
+    contentBreakdown: (summary?.content_breakdown ?? []).map((b) => ({
+      contentType: b.content_type,
+      learned: b.learned,
+      mastered: b.mastered,
+    })),
     recentSessions: sessionsResult.data ?? [],
   };
 }
