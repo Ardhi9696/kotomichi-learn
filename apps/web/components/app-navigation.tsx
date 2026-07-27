@@ -353,7 +353,7 @@ function SidebarContent({
             >
               Beranda
             </Link>
-            <form action={logout}>
+            <form action={logout} onSubmit={(e) => { if (!window.confirm('Yakin ingin keluar?')) e.preventDefault(); }}>
               <button
                 className="h-full w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/40 hover:text-primary"
                 type="submit"
@@ -361,10 +361,6 @@ function SidebarContent({
                 Keluar
               </button>
             </form>
-          </div>
-          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-            <span className="text-xs font-semibold text-muted-foreground">Tema</span>
-            <ThemeSwitcher initialTheme={viewer.theme} persist />
           </div>
         </div>
       </div>
