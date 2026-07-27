@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { CatalogCard } from '@/features/catalog/catalog-card';
 import { CatalogFilters } from '@/features/catalog/catalog-filters';
 import { CatalogViewToggle } from '@/features/catalog/catalog-view-toggle';
+import { CatalogVocabularyFilters } from '@/features/catalog/catalog-vocabulary-filters';
 import { Pagination } from '@/features/catalog/pagination';
 import { getCatalog } from '@/features/catalog/queries';
 import {
@@ -90,7 +91,10 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
 
       {result.items.length ? (
         <>
-          <div className="mt-6 flex justify-end">
+          <div className="mt-6 flex flex-wrap justify-end gap-3">
+            {query.type === 'vocabulary' ? (
+              <CatalogVocabularyFilters query={query} />
+            ) : null}
             <CatalogViewToggle query={query} />
           </div>
           <section

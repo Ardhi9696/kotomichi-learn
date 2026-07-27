@@ -33,10 +33,15 @@ test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async
 }) => {
   await page.goto('/catalog?level=N5&type=vocabulary');
 
+  await page.getByText('Filter vocabulary').click();
   await page.getByLabel('Kelas kata').selectOption('verb');
   await page.getByLabel('Kelompok verba').selectOption('ichidan');
   await page.getByLabel('Tema').selectOption('food_drink');
-  await page.getByRole('button', { name: 'Terapkan' }).click();
+  await page
+    .locator('form')
+    .filter({ has: page.locator('[name="pos"]') })
+    .getByRole('button', { name: 'Terapkan' })
+    .click();
 
   await expect(page).toHaveURL(/pos=verb/);
   await expect(page).toHaveURL(/verb=ichidan/);

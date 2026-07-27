@@ -1075,6 +1075,21 @@ export type Database = {
           total_answers: number
         }[]
       }
+      get_learning_candidates: {
+        Args: {
+          p_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          p_content_type: Database["public"]["Enums"]["content_type"]
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_limit: number
+          p_parts_of_speech: Database["public"]["Enums"]["vocabulary_part_of_speech"][]
+          p_themes: Database["public"]["Enums"]["vocabulary_theme"][]
+          p_transitivities: Database["public"]["Enums"]["vocabulary_transitivity"][]
+          p_verb_groups: Database["public"]["Enums"]["vocabulary_verb_group"][]
+        }
+        Returns: {
+          content_item_id: string
+        }[]
+      }
       remove_user_role: {
         Args: {
           p_role: Database["public"]["Enums"]["app_role"]

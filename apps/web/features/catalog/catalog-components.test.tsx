@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { CatalogCard } from './catalog-card';
 import { CatalogFilters } from './catalog-filters';
 import { CatalogViewToggle } from './catalog-view-toggle';
+import { CatalogVocabularyFilters } from './catalog-vocabulary-filters';
 import { Pagination } from './pagination';
 import type { CatalogItem, CatalogQuery } from './types';
 
@@ -65,6 +66,20 @@ describe('catalog view controls', () => {
       'href',
       '/catalog?level=N5&type=vocabulary&view=list&page=3&q=makan&pos=verb&verb=ichidan&transitivity=transitive&theme=food_drink',
     );
+  });
+
+  it('shows vocabulary taxonomy filters as a separate control', () => {
+    render(
+      <div>
+        <CatalogVocabularyFilters query={query} />
+        <CatalogViewToggle query={query} />
+      </div>,
+    );
+
+    expect(screen.getByText('Filter vocabulary')).toBeVisible();
+    expect(screen.getByLabelText('Kelas kata')).toHaveValue('verb');
+    expect(screen.getByLabelText('Tema')).toHaveValue('food_drink');
+    expect(screen.getByRole('navigation', { name: 'Mode tampilan katalog' })).toBeVisible();
   });
 
   it('renders a compact list item with the same detail affordance', () => {

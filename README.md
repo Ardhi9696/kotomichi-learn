@@ -9,13 +9,15 @@ dari OpenJLPT dan disajikan melalui Supabase; dataset tidak disimpan di reposito
   judul, reading, makna Inggris, dan translation published.
 - Filter kosakata N5/N4 berdasarkan kelas kata, kelompok verba
   godan/ichidan/tidak beraturan, transitivitas, jenis kata sifat い/な, dan
-  sembilan tema praktis.
+  sembilan tema praktis melalui kontrol di samping mode grid/list.
 - Detail vocabulary, kanji, dan grammar dengan fallback bahasa Inggris.
 - Supabase Auth: email/password, Google OAuth, verifikasi email, dan pemulihan password.
 - Onboarding target JLPT, bahasa materi, dan target belajar harian.
 - Dashboard progres dasar.
 - Alur belajar terpadu: prompt depan, flip, pilihan ganda, feedback lengkap, lalu
   rating SRS yang langsung membuka kartu berikutnya; sesi review langsung membuka kuis.
+- Pembuatan sesi belajar dapat membatasi vocabulary N5/N4 berdasarkan taxonomy
+  yang sama dengan katalog.
 - Navigasi akun responsif dengan sidebar desktop dan drawer mobile berbasis role.
 - Workspace translation Indonesia/Korea dengan review dan audit revisi.
 - Pengaturan profil, locale, target, tema, ekspor, dan penghapusan akun.

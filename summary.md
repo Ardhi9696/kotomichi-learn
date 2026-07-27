@@ -10,7 +10,7 @@ hingga sinkronisasi sumber manual. Seluruh migration Supabase production telah
 diterapkan, termasuk `20260727080000_add_quiz_attempt_answer_text.sql` dan
 `20260727081000_add_catalog_translation_search.sql`. Taxonomy vocabulary N5/N4,
 seed klasifikasi, dan index reviewer juga telah diterapkan; migration terakhir
-tercatat di remote sebagai `20260727113104_index_vocabulary_taxonomy_reviewer`.
+tercatat di remote sebagai `20260727114014_add_filtered_learning_candidates`.
 
 ## Fitur yang sudah diterapkan
 
@@ -28,7 +28,8 @@ tercatat di remote sebagai `20260727113104_index_vocabulary_taxonomy_reviewer`.
 - Seluruh 1.294 vocabulary N5/N4 memiliki taxonomy multidimensi: kelas kata,
   kelompok verba, transitivitas, jenis kata sifat, dan sembilan tema ringkas.
 - Katalog vocabulary dapat difilter melalui taxonomy; badge ringkas muncul pada
-  kartu dan metadata lengkap muncul pada detail.
+  kartu dan metadata lengkap muncul pada detail. Kontrol filter ditempatkan di
+  samping toggle grid/list.
 - Klasifikasi gramatikal berasal dari JMdict, tema dari aturan Kotomichi yang
   deterministik, dengan provenance, confidence, dan antrean review.
 
@@ -49,6 +50,9 @@ tercatat di remote sebagai `20260727113104_index_vocabulary_taxonomy_reviewer`.
 ### Belajar, kuis, dan spaced repetition
 
 - Pembuatan dan kelanjutan sesi berdasarkan level, jenis materi, dan jumlah item.
+- Jenis materi Vocabulary memiliki pilihan subkategori N5/N4; kandidat sesi
+  difilter di database dan klasifikasi `needs_review` tidak digunakan ketika
+  filter taxonomy aktif.
 - Sesi baru memakai alur prompt depan → flip → pilihan ganda → feedback lengkap →
   rating yang langsung membuka kartu berikutnya.
 - Sesi review langsung membuka pilihan ganda tanpa sisi depan.
@@ -140,7 +144,7 @@ Hasil pemeriksaan terakhir:
 
 - ESLint lulus tanpa warning.
 - TypeScript strict type-check lulus.
-- 55 unit/component/schema test lulus.
+- 60 unit/component/schema test lulus.
 - 4 integration test berbasis credential tersedia dan otomatis skip jika akun
   fixture belum dikonfigurasi.
 - 12 Playwright E2E publik lulus, termasuk filter taxonomy N5.
@@ -151,6 +155,8 @@ Hasil pemeriksaan terakhir:
 - Uji transaksi Supabase lulus untuk:
   - seed taxonomy tepat 662 vocabulary N5 dan 632 vocabulary N4;
   - filter kelas kata, kelompok verba, transitivitas, jenis adjektiva, dan tema;
+  - kandidat sesi belajar terautentikasi mematuhi taxonomy dan mengecualikan
+    klasifikasi yang masih perlu review;
   - RPC pencarian katalog menemukan translation `published`, mengabaikan draft,
     menjaga filter/pagination, dan me-rollback seluruh fixture;
   - migration nullable `quiz_attempts.answer_text`, validasi blank/maksimal 500

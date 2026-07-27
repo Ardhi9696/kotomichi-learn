@@ -46,6 +46,14 @@ export async function createLearningSession(formData: FormData): Promise<never> 
     level: formString(formData, 'level'),
     contentTypes,
     itemCount: formString(formData, 'item_count'),
+    vocabularyPartOfSpeech: formString(formData, 'vocabulary_pos') || 'all',
+    vocabularyVerbGroup:
+      formString(formData, 'vocabulary_verb_group') || 'all',
+    vocabularyTransitivity:
+      formString(formData, 'vocabulary_transitivity') || 'all',
+    vocabularyAdjectiveType:
+      formString(formData, 'vocabulary_adjective_type') || 'all',
+    vocabularyTheme: formString(formData, 'vocabulary_theme') || 'all',
   });
 
   if (!result.success) {
@@ -63,29 +71,38 @@ export async function createLearningSession(formData: FormData): Promise<never> 
     redirect('/onboarding');
   }
 
-  const perTypeLimit = Math.ceil(result.data.itemCount / result.data.contentTypes.length);
   const contentResults = await Promise.all(
     result.data.contentTypes.map(async (contentType) => {
-      const { count: learnedCount, error: countError } = await supabase
-        .from('learning_progress')
-        .select('content_item_id,content_items!inner(level,content_type)', {
-          count: 'exact',
-          head: true,
-        })
-        .eq('user_id', user.id)
-        .eq('content_items.level', result.data.level)
-        .eq('content_items.content_type', contentType);
-      if (countError) return { data: null, error: countError };
-
-      const from = learnedCount ?? 0;
-      return supabase
-        .from('content_items')
-        .select('id')
-        .eq('is_active', true)
-        .eq('level', result.data.level)
-        .eq('content_type', contentType)
-        .order('identity_key')
-        .range(from, from + perTypeLimit - 1);
+      const appliesVocabularyFilter = contentType === 'vocabulary';
+      const { data, error } = await supabase.rpc('get_learning_candidates', {
+        p_level: result.data.level,
+        p_content_type: contentType,
+        p_parts_of_speech:
+          appliesVocabularyFilter && result.data.vocabularyPartOfSpeech !== 'all'
+            ? [result.data.vocabularyPartOfSpeech]
+            : [],
+        p_verb_groups:
+          appliesVocabularyFilter && result.data.vocabularyVerbGroup !== 'all'
+            ? [result.data.vocabularyVerbGroup]
+            : [],
+        p_transitivities:
+          appliesVocabularyFilter && result.data.vocabularyTransitivity !== 'all'
+            ? [result.data.vocabularyTransitivity]
+            : [],
+        p_adjective_types:
+          appliesVocabularyFilter && result.data.vocabularyAdjectiveType !== 'all'
+            ? [result.data.vocabularyAdjectiveType]
+            : [],
+        p_themes:
+          appliesVocabularyFilter && result.data.vocabularyTheme !== 'all'
+            ? [result.data.vocabularyTheme]
+            : [],
+        p_limit: result.data.itemCount,
+      });
+      return {
+        data: data?.map((item) => ({ id: item.content_item_id })) ?? null,
+        error,
+      };
     }),
   );
 
