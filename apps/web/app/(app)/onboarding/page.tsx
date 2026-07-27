@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { completeOnboarding } from '@/app/onboarding/actions';
+import { completeOnboarding } from '@/features/learning/onboarding-actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { SubmitButton } from '@/components/auth/submit-button';
 import { LEVELS } from '@/features/catalog/types';

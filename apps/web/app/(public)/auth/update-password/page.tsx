@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { updatePassword } from '@/app/auth/actions';
+import { updatePassword } from '@/lib/auth/actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { AuthShell } from '@/components/auth/auth-shell';
 import { SubmitButton } from '@/components/auth/submit-button';

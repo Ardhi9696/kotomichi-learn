@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { unstable_cache } from 'next/cache';
 
 import {
   type CatalogItem,
@@ -247,7 +248,7 @@ function toCatalogItem(
   };
 }
 
-export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
+async function getCatalogUncached(query: CatalogQuery): Promise<CatalogResult> {
   const client = createPublicClient();
   const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
   const page = Math.max(1, query.page);
@@ -366,7 +367,7 @@ async function getPublishedTranslation(
   return data ? { meanings: data.meanings } : null;
 }
 
-export async function getContentDetail(
+async function getContentDetailUncached(
   id: string,
   locale: Locale,
 ): Promise<ContentDetail> {
@@ -444,4 +445,171 @@ export async function getContentDetail(
     locale,
     isFallback,
   };
+}
+
+/** Public data only: this function never reads cookies or uses a user-bound client. */
+export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
+  const normalizedQuery = { ...query, search: cleanSearchTerm(query.search) };
+  return unstable_cache(
+    () => getCatalogUncached(normalizedQuery),
+    ['catalog', JSON.stringify(normalizedQuery)],
+    { revalidate: 300, tags: ['catalog'] },
+  )();
+}
+
+/** Public data only. Locale is part of the cache key and editorial mutations revalidate its tag. */
+export async function getContentDetail(id: string, locale: Locale): Promise<ContentDetail> {
+  return unstable_cache(
+    () => getContentDetailUncached(id, locale),
+    ['catalog-detail', id, locale],
+    { revalidate: 300, tags: ['catalog', `content:${id}`] },
+  )();
+}
+
+/**
+ * Batch-load multiple content details (for e.g. distractor data in flashcard sessions).
+ * Shares version maps across all items instead of calling getContentDetail N times.
+ */
+async function getContentDetailsBatchUncached(
+  ids: string[],
+  locale: Locale,
+): Promise<ContentDetail[]> {
+  if (ids.length === 0) return [];
+  const client = createPublicClient();
+
+  const { data: items, error: itemsError } = await client
+    .from('content_items')
+    .select('id,content_type,level,word,reading,character,pattern')
+    .in('id', ids);
+
+  if (itemsError) throw new Error(`Unable to batch-load content: ${itemsError.message}`);
+
+  const idOrder = new Map(ids.map((id, i) => [id, i]));
+  const sorted = items
+    .filter((item) => idOrder.has(item.id))
+    .sort((a, b) => (idOrder.get(a.id) ?? 0) - (idOrder.get(b.id) ?? 0));
+
+  const maps = await getVersionMaps(sorted);
+  const idsByType = { vocabulary: new Set<string>(), kanji: new Set<string>(), grammar: new Set<string>() };
+  for (const item of sorted) {
+    if (item.content_type === 'vocabulary') idsByType.vocabulary.add(item.id);
+    else if (item.content_type === 'kanji') idsByType.kanji.add(item.id);
+    else if (item.content_type === 'grammar') idsByType.grammar.add(item.id);
+  }
+
+  // Batch load published translations for non-English locales
+  const translations: Map<string, Record<string, unknown>> = new Map();
+  if (locale !== 'en') {
+    const results = await Promise.all([
+      idsByType.vocabulary.size
+        ? client
+            .from('vocab_translations')
+            .select('content_item_id,meanings,examples')
+            .in('content_item_id', [...idsByType.vocabulary])
+            .eq('locale', locale)
+            .eq('status', 'published')
+        : Promise.resolve({ data: [], error: null }),
+      idsByType.kanji.size
+        ? client
+            .from('kanji_translations')
+            .select('content_item_id,meanings')
+            .in('content_item_id', [...idsByType.kanji])
+            .eq('locale', locale)
+            .eq('status', 'published')
+        : Promise.resolve({ data: [], error: null }),
+      idsByType.grammar.size
+        ? client
+            .from('grammar_translations')
+            .select('content_item_id,meaning,formation,examples,tags,notes')
+            .in('content_item_id', [...idsByType.grammar])
+            .eq('locale', locale)
+            .eq('status', 'published')
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+
+    for (const result of results) {
+      if (result.error) continue;
+      for (const row of result.data ?? []) {
+        translations.set(row.content_item_id, row);
+      }
+    }
+  }
+
+  return sorted.map((item) => {
+    const base = toCatalogItem(item, maps);
+    const translated = translations.get(item.id) as Awaited<ReturnType<typeof getPublishedTranslation>> | undefined;
+    const meanings = translated?.meanings ?? base.meanings;
+    const isFallback = locale !== 'en' && !translated;
+    const editorial = maps.editorial.get(item.id);
+
+    if (item.content_type === 'vocabulary') {
+      const version = maps.vocabulary.get(item.id);
+      return {
+        ...base,
+        type: 'vocabulary' as const,
+        meanings,
+        examples: translated?.examples
+          ? parseExamples(translated.examples)
+          : editorial
+            ? parseExamples(editorial.examples)
+            : version
+              ? parseExamples(version.examples)
+              : [],
+        locale,
+        isFallback,
+      } as ContentDetail;
+    }
+
+    if (item.content_type === 'kanji') {
+      const version = maps.kanji.get(item.id);
+      return {
+        ...base,
+        type: 'kanji' as const,
+        meanings,
+        examples: [],
+        onyomi: editorial?.onyomi ?? version?.onyomi ?? [],
+        kunyomi: editorial?.kunyomi ?? version?.kunyomi ?? [],
+        strokes: editorial?.strokes ?? version?.strokes ?? null,
+        grade: editorial?.grade ?? version?.grade ?? null,
+        frequency: editorial?.frequency ?? version?.frequency ?? null,
+        locale,
+        isFallback,
+      } as ContentDetail;
+    }
+
+    const version = maps.grammar.get(item.id);
+    return {
+      ...base,
+      type: 'grammar' as const,
+      meanings,
+      examples: translated?.examples
+        ? parseExamples(translated.examples)
+        : editorial
+          ? parseExamples(editorial.examples)
+          : version
+            ? parseExamples(version.examples)
+            : [],
+      formation: translated?.formation ?? editorial?.formation ?? version?.formation ?? '',
+      tags: translated?.tags ?? editorial?.tags ?? version?.tags ?? [],
+      notes: translated?.notes ?? editorial?.notes ?? version?.notes ?? '',
+      locale,
+      isFallback,
+    } as ContentDetail;
+  });
+}
+
+/** Batch variant: cache keyed by joined IDs + locale. Loads at most ~25 items in one pass. */
+const MAX_BATCH_SIZE = 25;
+export async function getContentDetailsBatch(
+  ids: string[],
+  locale: Locale,
+): Promise<ContentDetail[]> {
+  if (ids.length === 0) return [];
+  const uniqueIds = [...new Set(ids)].slice(0, MAX_BATCH_SIZE);
+  const key = `batch:${uniqueIds.sort().join(',')}:${locale}`;
+  return unstable_cache(
+    () => getContentDetailsBatchUncached(uniqueIds, locale),
+    ['catalog-detail-batch', key],
+    { revalidate: 300, tags: ['catalog', ...uniqueIds.map((id) => `content:${id}`)] },
+  )();
 }

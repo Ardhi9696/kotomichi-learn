@@ -1,10 +1,6 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_JP, Noto_Serif_JP, Plus_Jakarta_Sans } from 'next/font/google';
 
-import { AppShell } from '@/components/app-shell';
-import type { ThemePreference } from '@/features/settings/profile-schema';
-import { createClient } from '@/lib/supabase/server';
-
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -36,37 +32,14 @@ export const metadata: Metadata = {
 
 const themeBootstrapScript = `(function(){try{var d=document.documentElement;if(d.dataset.themeSource==="profile")return;var t=localStorage.getItem("kotomichi-theme");if(t==="light"||t==="dark"||t==="system")d.dataset.theme=t}catch(e){}})()`;
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const [profileResult, rolesResult] = user
-    ? await Promise.all([
-        supabase
-          .from('profiles')
-          .select('display_name,target_level,theme')
-          .eq('id', user.id)
-          .maybeSingle(),
-        supabase.from('user_roles').select('role').eq('user_id', user.id),
-      ])
-    : [{ data: null }, { data: [] }];
-  const profile = profileResult.data;
-  const theme: ThemePreference =
-    profile?.theme === 'light' ||
-    profile?.theme === 'dark' ||
-    profile?.theme === 'system'
-      ? profile.theme
-      : 'system';
-  const hasProfileTheme = Boolean(profile);
-
   return (
     <html
       data-scroll-behavior="smooth"
-      data-theme={theme}
-      data-theme-source={hasProfileTheme ? 'profile' : 'local'}
+      data-theme="system"
+      data-theme-source="local"
       lang="id"
       suppressHydrationWarning
     >
@@ -80,23 +53,7 @@ export default async function RootLayout({
         >
           Lewati ke konten
         </a>
-        <AppShell
-          viewer={
-            user
-              ? {
-                  displayName:
-                    profile?.display_name ?? user.email?.split('@')[0] ?? 'Learner',
-                  email: user.email ?? '',
-                  targetLevel: profile?.target_level ?? 'N5',
-                  theme,
-                  roles: rolesResult.data?.map((row) => row.role) ?? [],
-                }
-              : null
-          }
-          initialTheme={theme}
-        >
-          {children}
-        </AppShell>
+        {children}
       </body>
     </html>
   );

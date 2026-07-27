@@ -21,6 +21,11 @@ function isPathWithin(pathname: string, paths: string[]): boolean {
   return paths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
+/** Kept separate so the proxy scope has a small, testable route contract. */
+export function matchesAuthProxyRoute(pathname: string): boolean {
+  return isPathWithin(pathname, [...PROTECTED_PATHS, ...AUTH_PATHS]);
+}
+
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -63,6 +68,17 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/dashboard/:path*',
+    '/learn/:path*',
+    '/review/:path*',
+    '/onboarding/:path*',
+    '/settings/:path*',
+    '/editor/:path*',
+    '/translations/:path*',
+    '/reports/:path*',
+    '/admin/:path*',
+    '/auth/login',
+    '/auth/register',
+    '/auth/update-password',
   ],
 };

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { deleteAccount, updateProfile } from '@/app/settings/actions';
+import { deleteAccount, updateProfile } from '@/features/settings/actions';
 import { AuthMessage } from '@/components/auth/auth-message';
 import { SubmitButton } from '@/components/auth/submit-button';
 import { ThemePreferenceSelect } from '@/components/theme-preference-select';

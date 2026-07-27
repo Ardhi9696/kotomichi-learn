@@ -5,7 +5,7 @@ import { AuthMessage } from '@/components/auth/auth-message';
 import { AuthShell } from '@/components/auth/auth-shell';
 import { GoogleAuthForm } from '@/components/auth/google-auth-form';
 import { SubmitButton } from '@/components/auth/submit-button';
-import { login } from '@/app/auth/actions';
+import { login } from '@/lib/auth/actions';
 import { safeRedirectPath } from '@/lib/auth/safe-redirect';
 
 export const metadata: Metadata = {
