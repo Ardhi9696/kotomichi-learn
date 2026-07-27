@@ -63,7 +63,7 @@ export function CatalogFilters({ query }: { query: CatalogQuery }) {
         </label>
 
         <button
-          className="h-12 rounded-xl bg-primary px-6 font-semibold text-white transition hover:bg-primary-hover focus-visible:outline-2"
+          className="h-12 rounded-xl bg-primary px-6 font-semibold text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2"
           type="submit"
         >
           Terapkan

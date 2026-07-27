@@ -43,7 +43,7 @@ export default async function LearningSessionPage({ params }: LearningSessionPag
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              className="rounded-full bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-hover"
+              className="rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary-hover"
               href="/learn"
             >
               Mulai sesi baru

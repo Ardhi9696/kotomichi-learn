@@ -73,14 +73,14 @@ export default async function ContentDetailPage({
         <header className="paper-grid relative border-b border-border px-6 py-10 sm:px-10 sm:py-14">
           <div className="absolute top-0 right-0 h-full w-2 bg-primary" />
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
+            <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
               {detail.level}
             </span>
             <span className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-muted-foreground">
               {typeLabels[detail.type]}
             </span>
             {detail.isFallback ? (
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
+              <span className="rounded-full bg-warning-soft px-3 py-1 text-xs font-semibold text-warning-foreground">
                 Terjemahan Inggris
               </span>
             ) : null}
@@ -142,31 +142,31 @@ export default async function ContentDetailPage({
             ) : null}
           </div>
 
-          <aside className="rounded-2xl bg-foreground p-6 text-background">
+          <aside className="rounded-2xl bg-inverse p-6 text-inverse-foreground">
             <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">
               Catatan materi
             </p>
             {detail.type === 'kanji' ? (
               <dl className="mt-5 grid gap-5 text-sm">
                 <div>
-                  <dt className="text-background/55">On&apos;yomi</dt>
+                  <dt className="text-inverse-muted">On&apos;yomi</dt>
                   <dd className="mt-1 font-medium">{detail.onyomi.join(' · ') || '—'}</dd>
                 </div>
                 <div>
-                  <dt className="text-background/55">Kun&apos;yomi</dt>
+                  <dt className="text-inverse-muted">Kun&apos;yomi</dt>
                   <dd className="mt-1 font-medium">{detail.kunyomi.join(' · ') || '—'}</dd>
                 </div>
-                <div className="grid grid-cols-3 gap-3 border-t border-white/15 pt-5">
+                <div className="grid grid-cols-3 gap-3 border-t border-inverse-border pt-5">
                   <div>
-                    <dt className="text-background/55">Strokes</dt>
+                    <dt className="text-inverse-muted">Strokes</dt>
                     <dd className="mt-1 text-lg font-bold">{detail.strokes ?? '—'}</dd>
                   </div>
                   <div>
-                    <dt className="text-background/55">Grade</dt>
+                    <dt className="text-inverse-muted">Grade</dt>
                     <dd className="mt-1 text-lg font-bold">{detail.grade ?? '—'}</dd>
                   </div>
                   <div>
-                    <dt className="text-background/55">Freq.</dt>
+                    <dt className="text-inverse-muted">Freq.</dt>
                     <dd className="mt-1 text-lg font-bold">{detail.frequency ?? '—'}</dd>
                   </div>
                 </div>
@@ -176,20 +176,20 @@ export default async function ContentDetailPage({
             {detail.type === 'grammar' ? (
               <div className="mt-5 grid gap-5 text-sm">
                 <div>
-                  <p className="text-background/55">Formation</p>
+                  <p className="text-inverse-muted">Formation</p>
                   <p className="mt-1 font-medium">{detail.formation || '—'}</p>
                 </div>
                 {detail.notes ? (
                   <div>
-                    <p className="text-background/55">Notes</p>
+                    <p className="text-inverse-muted">Notes</p>
                     <p className="mt-1 font-medium">{detail.notes}</p>
                   </div>
                 ) : null}
                 {detail.tags.length ? (
-                  <div className="flex flex-wrap gap-2 border-t border-white/15 pt-5">
+                  <div className="flex flex-wrap gap-2 border-t border-inverse-border pt-5">
                     {detail.tags.map((tag) => (
                       <span
-                        className="rounded-full border border-white/20 px-3 py-1 text-xs"
+                        className="rounded-full border border-inverse-border px-3 py-1 text-xs"
                         key={tag}
                       >
                         {tag}
@@ -205,7 +205,7 @@ export default async function ContentDetailPage({
                 {detail.taxonomy && !detail.taxonomy.needsReview ? (
                   <>
                     <div>
-                      <p className="text-background/55">Kelas kata</p>
+                      <p className="text-inverse-muted">Kelas kata</p>
                       <p className="mt-1 font-medium">
                         {detail.taxonomy.partsOfSpeech
                           .map((value) => partOfSpeechLabels[value])
@@ -214,7 +214,7 @@ export default async function ContentDetailPage({
                     </div>
                     {detail.taxonomy.verbGroups.length ? (
                       <div>
-                        <p className="text-background/55">Jenis kata kerja</p>
+                        <p className="text-inverse-muted">Jenis kata kerja</p>
                         <p className="mt-1 font-medium">
                           {[
                             ...detail.taxonomy.verbGroups.map(
@@ -229,7 +229,7 @@ export default async function ContentDetailPage({
                     ) : null}
                     {detail.taxonomy.adjectiveTypes.length ? (
                       <div>
-                        <p className="text-background/55">Jenis kata sifat</p>
+                        <p className="text-inverse-muted">Jenis kata sifat</p>
                         <p className="mt-1 font-medium">
                           {detail.taxonomy.adjectiveTypes
                             .map((value) => adjectiveTypeLabels[value])
@@ -238,10 +238,10 @@ export default async function ContentDetailPage({
                       </div>
                     ) : null}
                     {detail.taxonomy.themes.length ? (
-                      <div className="flex flex-wrap gap-2 border-t border-white/15 pt-5">
+                      <div className="flex flex-wrap gap-2 border-t border-inverse-border pt-5">
                         {detail.taxonomy.themes.map((value) => (
                           <span
-                            className="rounded-full border border-white/20 px-3 py-1 text-xs"
+                            className="rounded-full border border-inverse-border px-3 py-1 text-xs"
                             key={value}
                           >
                             {themeLabels[value]}
@@ -251,11 +251,11 @@ export default async function ContentDetailPage({
                     ) : null}
                   </>
                 ) : detail.taxonomy?.needsReview ? (
-                  <p className="leading-7 text-background/70">
+                  <p className="leading-7 text-inverse-muted">
                     Klasifikasi sedang menunggu review editorial.
                   </p>
                 ) : (
-                  <p className="leading-7 text-background/70">
+                  <p className="leading-7 text-inverse-muted">
                     Klasifikasi kosakata ini belum tersedia.
                   </p>
                 )}
@@ -279,12 +279,12 @@ export default async function ContentDetailPage({
         </p>
 
         {message ? (
-          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
+          <div className="mt-5 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground" role="status">
             {message}
           </div>
         ) : null}
         {error ? (
-          <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+          <div className="mt-5 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground" role="alert">
             {error}
           </div>
         ) : null}
@@ -327,7 +327,7 @@ export default async function ContentDetailPage({
               Masuk terlebih dahulu agar laporan dapat ditindaklanjuti.
             </p>
             <Link
-              className="mt-4 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-primary-hover"
+              className="mt-4 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
               href={`/auth/login?next=${encodeURIComponent(returnPath)}`}
             >
               Masuk untuk melapor

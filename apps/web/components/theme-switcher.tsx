@@ -83,7 +83,7 @@ export function ThemeSwitcher({
           );
         })}
         {saveFailed ? (
-          <p className="px-3 pt-2 text-xs leading-5 text-red-600" role="status">
+          <p className="px-3 pt-2 text-xs leading-5 text-danger-foreground" role="status">
             Tema diterapkan, tetapi belum tersimpan ke akun.
           </p>
         ) : null}

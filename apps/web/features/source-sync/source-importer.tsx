@@ -122,9 +122,9 @@ export function SourceImporter() {
       <p
         className={`mt-4 rounded-xl px-4 py-3 text-sm ${
           state.kind === 'error'
-            ? 'bg-red-50 text-red-900'
+            ? 'bg-danger-soft text-danger-foreground'
             : state.kind === 'success'
-              ? 'bg-emerald-50 text-emerald-900'
+              ? 'bg-success-soft text-success-foreground'
               : 'bg-background text-muted-foreground'
         }`}
         role={state.kind === 'error' ? 'alert' : 'status'}

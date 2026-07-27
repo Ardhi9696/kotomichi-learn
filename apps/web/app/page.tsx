@@ -52,7 +52,7 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-hover focus-visible:outline-2"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-primary-hover focus-visible:outline-2"
                 href="/catalog?level=N5&type=all"
               >
                 Mulai dari N5
@@ -95,7 +95,7 @@ export default function HomePage() {
             >
               毎日、一歩ずつ
             </div>
-            <div className="absolute inset-0 grid place-items-center text-white">
+            <div className="absolute inset-0 grid place-items-center text-primary-foreground">
               <div className="torii" />
             </div>
             <div className="absolute bottom-[4%] left-[2%] w-[72%] rounded-3xl border border-white/80 bg-surface/95 p-5 shadow-card backdrop-blur sm:p-7">
@@ -188,17 +188,17 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-7 py-14 text-white sm:px-12 lg:px-16">
-          <div className="absolute -top-24 -right-20 size-72 rounded-full border-[48px] border-white/10" />
+        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-7 py-14 text-primary-foreground sm:px-12 lg:px-16">
+          <div className="absolute -top-24 -right-20 size-72 rounded-full border-[48px] border-primary-foreground/10" />
           <div className="relative max-w-2xl">
-            <p className="text-xs font-bold tracking-[0.22em] text-white/70 uppercase">
+            <p className="text-xs font-bold tracking-[0.22em] text-primary-foreground/70 uppercase">
               Langkah pertama
             </p>
             <h2 className="mt-4 font-serif text-4xl leading-tight font-bold">
               Satu kata hari ini bisa membuka satu dunia esok hari.
             </h2>
             <Link
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-primary transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-white"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary-foreground px-6 py-3.5 font-semibold text-primary transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-primary-foreground"
               href="/catalog?level=N5&type=all"
             >
               Buka materi N5

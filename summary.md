@@ -47,6 +47,9 @@ tercatat di remote sebagai `20260727114014_add_filtered_learning_candidates`.
   login disimpan ke profil, dan bootstrap sebelum hydration mencegah flash tema.
 - Section landing “Dibuat untuk benar-benar belajar” kini terang di mode Light dan
   gelap di mode Dark; kontras heading, body, serta badge `毎日、一歩ずつ` diuji otomatis.
+- Palet status sukses, peringatan, dan error, panel feedback belajar, tombol primary,
+  serta panel inverse kini memakai token adaptif Light/Dark; warna border komponen
+  tidak lagi tertimpa aturan border global.
 - Ekspor data akun sebagai JSON, meliputi profil, role, progres, sesi, attempt,
   dan laporan.
 - Penghapusan akun mandiri dengan konfirmasi eksplisit. Penghapusan `auth.users`

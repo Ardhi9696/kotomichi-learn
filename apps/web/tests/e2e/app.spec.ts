@@ -94,12 +94,53 @@ test('visitor can switch and persist light, dark, and system themes', async ({
   expect(contrast.heading).toBeGreaterThanOrEqual(7);
   expect(contrast.body).toBeGreaterThanOrEqual(4.5);
 
+  const primaryButtonContrast = await page
+    .getByRole('link', { name: 'Mulai sekarang' })
+    .evaluate((button) => {
+      function luminance(color: string) {
+        const channels = color.match(/\d+(?:\.\d+)?/g)?.slice(0, 3).map(Number) ?? [];
+        const linear = channels.map((channel) => {
+          const value = channel / 255;
+          return value <= 0.04045
+            ? value / 12.92
+            : ((value + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+      }
+
+      const style = getComputedStyle(button);
+      const foreground = luminance(style.color);
+      const background = luminance(style.backgroundColor);
+      return (Math.max(foreground, background) + 0.05) /
+        (Math.min(foreground, background) + 0.05);
+    });
+  expect(primaryButtonContrast).toBeGreaterThanOrEqual(4.5);
+
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
   await page.getByLabel('Tema: Gelap').click();
   await page.getByRole('button', { name: 'Sistem' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'system');
+});
+
+test('semantic status surfaces use their dark palette', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem('kotomichi-theme', 'dark');
+  });
+
+  await page.goto('/auth/login?error=Data%20belum%20dapat%20disimpan');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  const error = page.getByText('Data belum dapat disimpan', { exact: true });
+  await expect(error).toHaveCSS('background-color', 'rgb(53, 27, 26)');
+  await expect(error).toHaveCSS('color', 'rgb(255, 170, 164)');
+  await expect(error).toHaveCSS('border-color', 'rgb(111, 55, 50)');
+
+  await page.goto('/auth/login?message=Data%20berhasil%20disimpan');
+  const success = page.getByText('Data berhasil disimpan', { exact: true });
+  await expect(success).toHaveCSS('background-color', 'rgb(20, 44, 32)');
+  await expect(success).toHaveCSS('color', 'rgb(149, 219, 173)');
+  await expect(success).toHaveCSS('border-color', 'rgb(49, 92, 65)');
 });
 
 test('learner can open the N5 catalog and a material detail', async ({ page }) => {

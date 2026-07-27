@@ -13,7 +13,7 @@ export function SubmitButton({
 
   return (
     <button
-      className="h-12 w-full rounded-xl bg-primary px-5 font-semibold text-white transition hover:bg-primary-hover focus-visible:outline-2 disabled:cursor-wait disabled:opacity-65"
+      className="h-12 w-full rounded-xl bg-primary px-5 font-semibold text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 disabled:cursor-wait disabled:opacity-65"
       disabled={pending}
       type="submit"
     >

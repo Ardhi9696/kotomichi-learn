@@ -67,9 +67,9 @@ export default function AttributionsPage() {
         ))}
       </section>
 
-      <section className="mt-10 rounded-2xl bg-foreground p-7 text-background">
+      <section className="mt-10 rounded-2xl bg-inverse p-7 text-inverse-foreground">
         <h2 className="font-serif text-2xl font-bold">Catatan penting tentang JLPT</h2>
-        <p className="mt-4 text-sm leading-7 text-background/70">
+        <p className="mt-4 text-sm leading-7 text-inverse-muted">
           Japan Foundation dan organisasi JLPT tidak menerbitkan daftar vocabulary atau
           kanji resmi untuk N5–N1. Pembagian level di aplikasi ini merupakan perkiraan
           komunitas dari sumber terbuka dan tidak boleh dianggap sebagai silabus resmi.

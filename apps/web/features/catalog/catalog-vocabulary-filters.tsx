@@ -29,7 +29,7 @@ export function CatalogVocabularyFilters({ query }: { query: CatalogQuery }) {
         <FilterIcon />
         Filter vocabulary
         {activeCount ? (
-          <span className="grid size-5 place-items-center rounded-full bg-primary text-[11px] text-white">
+          <span className="grid size-5 place-items-center rounded-full bg-primary text-[11px] text-primary-foreground">
             {activeCount}
           </span>
         ) : null}
@@ -96,7 +96,7 @@ export function CatalogVocabularyFilters({ query }: { query: CatalogQuery }) {
             Reset
           </a>
           <button
-            className="h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover"
+            className="h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             type="submit"
           >
             Terapkan

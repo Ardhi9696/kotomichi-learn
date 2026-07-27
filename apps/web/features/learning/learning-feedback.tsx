@@ -20,7 +20,7 @@ function RatingButtons({ isCorrect }: { isCorrect: boolean }) {
     return (
       <button
         aria-disabled={blockedByAnswer}
-        className="rounded-xl border border-border bg-white/70 px-3 py-3 font-semibold transition enabled:hover:border-primary enabled:hover:text-primary focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-45"
+        className="rounded-xl border border-border bg-surface/80 px-3 py-3 font-semibold transition enabled:hover:border-primary enabled:hover:text-primary focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-45"
         disabled={pending || blockedByAnswer}
         key={rating.value}
         name="rating"
@@ -52,7 +52,9 @@ export function LearningFeedback({
   return (
     <article
       className={`rounded-[2rem] border p-7 shadow-card sm:p-10 ${
-        isCorrect ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'
+        isCorrect
+          ? 'border-success-border bg-success-soft'
+          : 'border-warning-border bg-warning-soft'
       }`}
     >
       <header className="text-center">
@@ -67,7 +69,7 @@ export function LearningFeedback({
         </h1>
       </header>
 
-      <dl className="mt-7 grid gap-4 rounded-2xl bg-white/70 p-5 sm:grid-cols-2">
+      <dl className="mt-7 grid gap-4 rounded-2xl bg-surface/80 p-5 sm:grid-cols-2">
         <div>
           <dt className="text-sm text-muted-foreground">Jawabanmu</dt>
           <dd className="mt-1 font-semibold">
@@ -115,7 +117,7 @@ export function LearningFeedback({
       ) : null}
 
       {detail.examples[0] ? (
-        <blockquote className="mt-6 rounded-2xl bg-white/70 p-5">
+        <blockquote className="mt-6 rounded-2xl bg-surface/80 p-5">
           <p className="text-lg font-medium" lang="ja">
             {detail.examples[0].ja}
           </p>

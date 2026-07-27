@@ -46,7 +46,7 @@ export default async function TranslationEditorPage({ params, searchParams }: Pa
         </Link>
         <div className="flex gap-2">
           {(['id', 'ko'] as const).map((value) => (
-            <Link className={`rounded-full px-4 py-2 text-sm font-semibold ${locale === value ? 'bg-primary text-white' : 'border border-border'}`} href={`/translations/${id}?locale=${value}`} key={value}>
+            <Link className={`rounded-full px-4 py-2 text-sm font-semibold ${locale === value ? 'bg-primary text-primary-foreground' : 'border border-border'}`} href={`/translations/${id}?locale=${value}`} key={value}>
               {value.toUpperCase()}
             </Link>
           ))}
@@ -63,15 +63,15 @@ export default async function TranslationEditorPage({ params, searchParams }: Pa
         </p>
       </header>
 
-      {message ? <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">{message}</div> : null}
-      {error ? <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">{error}</div> : null}
+      {message ? <div className="mt-6 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground">{message}</div> : null}
+      {error ? <div className="mt-6 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground">{error}</div> : null}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
-        <aside className="rounded-3xl bg-foreground p-6 text-background sm:p-8">
+        <aside className="rounded-3xl bg-inverse p-6 text-inverse-foreground sm:p-8">
           <p className="text-xs font-bold tracking-wider text-accent uppercase">Sumber Inggris</p>
           <p className="mt-5 whitespace-pre-line leading-7">{data.source.meanings}</p>
-          {data.source.formation ? <p className="mt-5 border-t border-white/15 pt-5 text-sm">{data.source.formation}</p> : null}
-          {data.source.examples ? <pre className="mt-5 whitespace-pre-wrap text-sm text-background/70">{data.source.examples}</pre> : null}
+          {data.source.formation ? <p className="mt-5 border-t border-inverse-border pt-5 text-sm">{data.source.formation}</p> : null}
+          {data.source.examples ? <pre className="mt-5 whitespace-pre-wrap text-sm text-inverse-muted">{data.source.examples}</pre> : null}
         </aside>
 
         <section className="rounded-3xl border border-border bg-surface p-6 shadow-card sm:p-8">

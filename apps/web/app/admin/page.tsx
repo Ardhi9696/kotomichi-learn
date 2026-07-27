@@ -45,13 +45,13 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
-            className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-white"
+            className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground"
             href="/admin/sources"
           >
             Sinkronisasi sumber
           </Link>
           <Link
-            className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-white"
+            className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground"
             href="/reports"
           >
             Triase laporan
@@ -66,12 +66,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       </header>
 
       {message ? (
-        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
+        <div className="mt-6 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground" role="status">
           {message}
         </div>
       ) : null}
       {error ? (
-        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+        <div className="mt-6 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground" role="alert">
           {error}
         </div>
       ) : null}
@@ -120,7 +120,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               ))}
             </select>
             <button
-              className="w-full rounded-full bg-primary px-5 py-3 font-semibold text-white hover:bg-primary-hover"
+              className="w-full rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover"
               type="submit"
             >
               Tambahkan role
@@ -152,7 +152,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         <input name="user_id" type="hidden" value={assignment.userId} />
                         <input name="role" type="hidden" value={assignment.role} />
                         <button
-                          className="text-sm font-semibold text-red-700 hover:underline"
+                          className="text-sm font-semibold text-danger-foreground hover:underline"
                           type="submit"
                         >
                           Hapus

@@ -17,7 +17,7 @@ export default function GlobalError({
           Koneksi mungkin sedang terputus. Coba lagi tanpa kehilangan pilihanmu.
         </p>
         <button
-          className="mt-7 rounded-full bg-primary px-5 py-3 font-semibold text-white hover:bg-primary-hover"
+          className="mt-7 rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover"
           onClick={reset}
           type="button"
         >

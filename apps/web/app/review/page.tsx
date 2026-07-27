@@ -45,7 +45,7 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
       </header>
 
       {message ? (
-        <div className="mt-7 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <div className="mt-7 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground">
           {message}
         </div>
       ) : null}

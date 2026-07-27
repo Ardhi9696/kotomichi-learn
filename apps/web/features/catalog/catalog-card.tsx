@@ -17,7 +17,7 @@ function DetailLink({ item }: { item: CatalogItem }) {
   return (
     <Link
       aria-label={`Lihat detail ${item.title}`}
-      className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border text-primary transition group-hover:border-primary group-hover:bg-primary group-hover:text-white focus-visible:outline-2"
+      className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border text-primary transition group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground focus-visible:outline-2"
       href={`/catalog/${item.id}`}
     >
       <ArrowIcon />

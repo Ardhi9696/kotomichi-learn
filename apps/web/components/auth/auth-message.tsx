@@ -12,8 +12,8 @@ export function AuthMessage({
     <div
       className={
         error
-          ? 'mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900'
-          : 'mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900'
+          ? 'mb-5 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground'
+          : 'mb-5 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground'
       }
       role={error ? 'alert' : 'status'}
     >

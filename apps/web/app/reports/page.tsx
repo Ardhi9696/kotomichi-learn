@@ -59,12 +59,12 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
       </header>
 
       {message ? (
-        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
+        <div className="mt-6 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground" role="status">
           {message}
         </div>
       ) : null}
       {error ? (
-        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+        <div className="mt-6 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground" role="alert">
           {error}
         </div>
       ) : null}
@@ -74,7 +74,7 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
           <Link
             className={`rounded-full px-4 py-2 text-sm font-semibold ${
               status === value
-                ? 'bg-primary text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'border border-border bg-surface text-muted-foreground hover:text-primary'
             }`}
             href={`/reports?status=${value}`}

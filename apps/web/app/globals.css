@@ -4,6 +4,7 @@
   --color-primary: var(--theme-primary);
   --color-primary-hover: var(--theme-primary-hover);
   --color-primary-soft: var(--theme-primary-soft);
+  --color-primary-foreground: var(--theme-primary-foreground);
   --color-foreground: var(--theme-foreground);
   --color-muted-foreground: var(--theme-muted-foreground);
   --color-background: var(--theme-background);
@@ -39,6 +40,7 @@
   --theme-primary: #c92c23;
   --theme-primary-hover: #a9231c;
   --theme-primary-soft: #fbe9e7;
+  --theme-primary-foreground: #ffffff;
   --theme-foreground: #1c1c1c;
   --theme-muted-foreground: #6b6762;
   --theme-background: #f7f6f0;
@@ -76,6 +78,7 @@ html[data-theme='dark'] {
   --theme-primary: #ff746c;
   --theme-primary-hover: #ff9a94;
   --theme-primary-soft: #3b211f;
+  --theme-primary-foreground: #24110f;
   --theme-foreground: #f4f1eb;
   --theme-muted-foreground: #bcb5ac;
   --theme-background: #171513;
@@ -109,6 +112,7 @@ html[data-theme='dark'] {
     --theme-primary: #ff746c;
     --theme-primary-hover: #ff9a94;
     --theme-primary-soft: #3b211f;
+    --theme-primary-foreground: #24110f;
     --theme-foreground: #f4f1eb;
     --theme-muted-foreground: #bcb5ac;
     --theme-background: #171513;
@@ -137,8 +141,10 @@ html[data-theme='dark'] {
   }
 }
 
-* {
-  border-color: var(--theme-border);
+@layer base {
+  * {
+    border-color: var(--theme-border);
+  }
 }
 
 html {

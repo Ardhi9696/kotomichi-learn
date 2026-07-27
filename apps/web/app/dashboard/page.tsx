@@ -47,7 +47,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
       {message ? (
         <div
-          className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
+          className="mb-6 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground"
           role="status"
         >
           {message}
@@ -68,7 +68,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             href="/learn"
           >
             Mulai belajar
@@ -83,24 +83,24 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       </header>
 
       <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <article className="rounded-2xl bg-primary p-6 text-white shadow-[0_18px_45px_rgb(201_44_35_/_20%)]">
-          <p className="text-xs font-bold tracking-wider text-white/65 uppercase">
+        <article className="rounded-2xl bg-primary p-6 text-primary-foreground shadow-[0_18px_45px_rgb(201_44_35_/_20%)]">
+          <p className="text-xs font-bold tracking-wider text-primary-foreground/70 uppercase">
             Target hari ini
           </p>
           <p className="mt-5 text-4xl font-bold">
             {data.todayCompletedItems}
-            <span className="text-lg text-white/65">/{data.dailyGoal}</span>
+            <span className="text-lg text-primary-foreground/70">/{data.dailyGoal}</span>
           </p>
           <div
             aria-label={`Target harian ${data.dailyGoalProgress}%`}
             aria-valuemax={100}
             aria-valuemin={0}
             aria-valuenow={data.dailyGoalProgress}
-            className="mt-4 h-2 overflow-hidden rounded-full bg-white/20"
+            className="mt-4 h-2 overflow-hidden rounded-full bg-primary-foreground/20"
             role="progressbar"
           >
             <div
-              className="h-full rounded-full bg-white"
+              className="h-full rounded-full bg-primary-foreground"
               style={{ width: `${data.dailyGoalProgress}%` }}
             />
           </div>
@@ -236,7 +236,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             ))}
           </div>
           <Link
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-semibold text-white hover:bg-primary-hover"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover"
             href={data.dueItems ? '/review' : '/learn'}
           >
             {data.dueItems ? 'Mulai review' : 'Mulai sesi belajar'}
@@ -244,7 +244,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </Link>
         </section>
 
-        <section className="rounded-3xl bg-foreground p-6 text-background sm:p-8">
+        <section className="rounded-3xl bg-inverse p-6 text-inverse-foreground sm:p-8">
           <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">
             Aktivitas terakhir
           </p>
@@ -257,7 +257,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                     <p className="font-semibold">
                       {session.completed_item_count} item · {session.level}
                     </p>
-                    <p className="text-xs text-background/55">
+                    <p className="text-xs text-inverse-muted">
                       {session.session_mode === 'review' ? 'Review' : 'Belajar'} ·{' '}
                       {formatSessionDate(session.started_at)}
                     </p>
@@ -274,9 +274,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               ))}
             </ul>
           ) : (
-            <div className="mt-6 rounded-2xl border border-white/12 p-5">
+            <div className="mt-6 rounded-2xl border border-inverse-border p-5">
               <p className="font-semibold">Belum ada sesi</p>
-              <p className="mt-2 text-sm leading-6 text-background/60">
+              <p className="mt-2 text-sm leading-6 text-inverse-muted">
                 Riwayat dan akurasi akan muncul setelah kamu menyelesaikan sesi pertama.
               </p>
             </div>

@@ -243,7 +243,7 @@ function NavigationGroup({
                 aria-current={active ? 'page' : undefined}
                 className={`group flex min-h-14 items-center gap-3 rounded-xl px-3 py-2 transition focus-visible:outline-2 ${
                   active
-                    ? 'bg-primary text-white shadow-[0_8px_24px_rgb(201_44_35_/_18%)]'
+                    ? 'bg-primary text-primary-foreground shadow-[0_8px_24px_rgb(201_44_35_/_18%)]'
                     : 'text-muted-foreground hover:bg-background hover:text-foreground'
                 }`}
                 href={item.href}
@@ -252,7 +252,7 @@ function NavigationGroup({
                 <span
                   className={`grid size-9 shrink-0 place-items-center rounded-lg ${
                     active
-                      ? 'bg-white/15'
+                      ? 'bg-primary-foreground/15'
                       : 'bg-background text-muted-foreground group-hover:text-primary'
                   }`}
                 >
@@ -262,7 +262,7 @@ function NavigationGroup({
                   <span className="block text-sm font-semibold">{item.label}</span>
                   <span
                     className={`block truncate text-[0.68rem] ${
-                      active ? 'text-white/70' : 'text-muted-foreground'
+                      active ? 'text-primary-foreground/70' : 'text-muted-foreground'
                     }`}
                   >
                     {item.description}

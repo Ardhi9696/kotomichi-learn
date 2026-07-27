@@ -52,7 +52,7 @@ export function CatalogViewToggle({ query }: { query: CatalogQuery }) {
             aria-label={viewLabels[view]}
             className={`inline-flex size-10 items-center justify-center rounded-lg transition focus-visible:outline-2 ${
               active
-                ? 'bg-primary text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'text-muted-foreground hover:bg-primary-soft hover:text-primary'
             }`}
             href={viewHref(query, view)}

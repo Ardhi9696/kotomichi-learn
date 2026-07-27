@@ -53,7 +53,7 @@ export function LearningCard({
         >
           <div className="paper-grid px-6 py-10 text-center sm:px-10 sm:py-14">
             <div className="flex justify-center gap-2">
-              <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
+              <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
                 {detail.level}
               </span>
               <span className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-muted-foreground">
@@ -71,7 +71,7 @@ export function LearningCard({
               {detail.title}
             </h1>
             <button
-              className="mx-auto mt-10 block w-full max-w-sm rounded-xl bg-primary px-5 py-3 font-semibold text-white hover:bg-primary-hover focus-visible:outline-2"
+              className="mx-auto mt-10 block w-full max-w-sm rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover focus-visible:outline-2"
               onClick={() => setSide('quiz')}
               tabIndex={isQuiz ? -1 : 0}
               type="button"

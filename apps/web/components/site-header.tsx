@@ -57,7 +57,7 @@ export function SiteHeader({
             </Link>
           ) : null}
           <Link
-            className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover focus-visible:outline-2"
+            className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2"
             href="/dashboard"
           >
             {isAuthenticated ? 'Dashboard' : 'Mulai sekarang'}

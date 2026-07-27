@@ -47,12 +47,12 @@ export default async function SourcesPage({ searchParams }: SourcesPageProps) {
       </header>
 
       {message ? (
-        <p className="mt-6 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p className="mt-6 rounded-xl bg-success-soft px-4 py-3 text-sm text-success-foreground">
           {message}
         </p>
       ) : null}
       {error ? (
-        <p className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-900">
+        <p className="mt-6 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger-foreground">
           {error}
         </p>
       ) : null}
@@ -103,7 +103,7 @@ export default async function SourcesPage({ searchParams }: SourcesPageProps) {
                       Saya sudah memeriksa diff dan memahami perubahan katalog.
                     </label>
                     <button
-                      className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover"
+                      className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
                       type="submit"
                     >
                       {snapshot.status === 'archived'

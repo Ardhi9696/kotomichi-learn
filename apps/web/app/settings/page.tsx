@@ -155,7 +155,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           </a>
         </div>
 
-        <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-950">
+        <div className="rounded-3xl border border-danger-border bg-danger-soft p-6 text-danger-foreground">
           <h2 className="font-serif text-2xl font-bold">Hapus akun</h2>
           <p className="mt-2 text-sm leading-6">
             Tindakan ini permanen dan menghapus profil serta seluruh progres belajar.
@@ -165,13 +165,13 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               Ketik HAPUS untuk konfirmasi
               <input
                 autoComplete="off"
-                className="h-11 rounded-xl border border-red-300 bg-white px-4 font-normal"
+                className="h-11 rounded-xl border border-danger-border bg-background px-4 font-normal"
                 name="confirmation"
                 required
               />
             </label>
             <button
-              className="h-11 rounded-xl bg-red-700 px-5 text-sm font-semibold text-white hover:bg-red-800"
+              className="h-11 rounded-xl bg-danger-action px-5 text-sm font-semibold text-white hover:bg-danger-action-hover"
               type="submit"
             >
               Hapus akun permanen

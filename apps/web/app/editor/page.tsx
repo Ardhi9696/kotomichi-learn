@@ -57,7 +57,7 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
             Dashboard
           </Link>
           <Link
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             href="/editor/new"
           >
             Tambah materi
@@ -66,12 +66,12 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
       </header>
 
       {message ? (
-        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
+        <div className="mt-6 rounded-xl border border-success-border bg-success-soft px-4 py-3 text-sm text-success-foreground" role="status">
           {message}
         </div>
       ) : null}
       {error ? (
-        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+        <div className="mt-6 rounded-xl border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-foreground" role="alert">
           {error}
         </div>
       ) : null}
@@ -160,7 +160,7 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
                           : 'OpenJLPT'}
                     </span>
                     {!item.isActive ? (
-                      <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700">
+                      <span className="rounded-full bg-danger-soft px-2.5 py-1 text-xs font-bold text-danger-foreground">
                         Diarsipkan
                       </span>
                     ) : null}
@@ -187,8 +187,8 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
                     <button
                       className={`rounded-full px-4 py-2 text-sm font-semibold ${
                         item.isActive
-                          ? 'text-red-700 hover:bg-red-50'
-                          : 'text-emerald-700 hover:bg-emerald-50'
+                          ? 'text-danger-foreground hover:bg-danger-soft'
+                          : 'text-success-foreground hover:bg-success-soft'
                       }`}
                       type="submit"
                     >
