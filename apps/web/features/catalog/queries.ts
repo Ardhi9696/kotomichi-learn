@@ -7,11 +7,12 @@ import {
   type CatalogResult,
   type ContentDetail,
   type ContentType,
+  type Level,
   type Locale,
   type VocabularyTaxonomy,
   parseExamples,
 } from '@/features/catalog/types';
-import type { Tables } from '@/lib/supabase/database.types';
+import type { Database, Enums, Tables } from '@/lib/supabase/database.types';
 import { createPublicClient } from '@/lib/supabase/public';
 
 type ContentItemRow = Pick<
@@ -248,6 +249,122 @@ function toCatalogItem(
   };
 }
 
+type CatalogRow = {
+  content_item_id: string;
+  total_count: number;
+  item_word: string | null;
+  item_reading: string | null;
+  item_character: string | null;
+  item_pattern: string | null;
+  content_type: Enums<'content_type'>;
+  level: Enums<'jlpt_level'>;
+  vocab_word: string | null;
+  vocab_reading: string | null;
+  vocab_meanings: string[] | null;
+  vocab_examples: unknown | null;
+  kanji_char: string | null;
+  kanji_meanings: string[] | null;
+  kanji_onyomi: string[] | null;
+  kanji_kunyomi: string[] | null;
+  kanji_strokes: number | null;
+  kanji_grade: number | null;
+  kanji_frequency: number | null;
+  grammar_pattern: string | null;
+  grammar_meaning: string | null;
+  grammar_formation: string | null;
+  grammar_examples: unknown | null;
+  grammar_tags: string[] | null;
+  grammar_notes: string | null;
+  editorial_title: string | null;
+  editorial_reading: string | null;
+  editorial_meanings: string[] | null;
+  editorial_examples: unknown | null;
+  editorial_formation: string | null;
+  editorial_tags: string[] | null;
+  editorial_notes: string | null;
+  editorial_onyomi: string[] | null;
+  editorial_kunyomi: string[] | null;
+  editorial_strokes: number | null;
+  editorial_grade: number | null;
+  editorial_frequency: number | null;
+  taxonomy_parts_of_speech: Enums<'vocabulary_part_of_speech'>[] | null;
+  taxonomy_verb_groups: Enums<'vocabulary_verb_group'>[] | null;
+  taxonomy_transitivities: Enums<'vocabulary_transitivity'>[] | null;
+  taxonomy_adjective_types: Enums<'vocabulary_adjective_type'>[] | null;
+  taxonomy_themes: Enums<'vocabulary_theme'>[] | null;
+  taxonomy_needs_review: boolean | null;
+};
+
+function rowToCatalogItem(row: CatalogRow): CatalogItem {
+  const taxonomy: VocabularyTaxonomy | null = row.taxonomy_parts_of_speech
+    ? {
+        partsOfSpeech: row.taxonomy_parts_of_speech,
+        verbGroups: row.taxonomy_verb_groups ?? [],
+        transitivities: row.taxonomy_transitivities ?? [],
+        adjectiveTypes: row.taxonomy_adjective_types ?? [],
+        themes: row.taxonomy_themes ?? [],
+        needsReview: row.taxonomy_needs_review ?? false,
+      }
+    : null;
+  const ctype = row.content_type as ContentType;
+  const clevel = row.level as Level;
+
+  if (row.editorial_title) {
+    return {
+      id: row.content_item_id,
+      type: ctype,
+      level: clevel,
+      title: row.editorial_title,
+      reading: row.editorial_reading || null,
+      meanings: row.editorial_meanings ?? [],
+      supportingText:
+        row.content_type === 'grammar'
+          ? row.editorial_formation || null
+          : row.content_type === 'kanji' && row.editorial_strokes
+            ? `${row.editorial_strokes} strokes`
+            : null,
+      taxonomy: row.content_type === 'vocabulary' ? taxonomy : null,
+    };
+  }
+
+  if (row.content_type === 'vocabulary') {
+    return {
+      id: row.content_item_id,
+      type: ctype,
+      level: clevel,
+      title: row.item_word ?? '',
+      reading: row.item_reading || null,
+      meanings: row.vocab_meanings ?? [],
+      supportingText: null,
+      taxonomy,
+    };
+  }
+
+  if (row.content_type === 'kanji') {
+    return {
+      id: row.content_item_id,
+      type: ctype,
+      level: clevel,
+      title: row.item_character ?? '',
+      reading: row.kanji_kunyomi?.[0] ?? row.kanji_onyomi?.[0] ?? null,
+      meanings: row.kanji_meanings ?? [],
+      supportingText: row.kanji_strokes ? `${row.kanji_strokes} strokes` : null,
+      taxonomy: null,
+    };
+  }
+
+  return {
+    id: row.content_item_id,
+    type: ctype,
+    level: clevel,
+    title: row.item_pattern ?? '',
+    reading: null,
+    meanings: row.grammar_meaning ? [row.grammar_meaning] : [],
+    supportingText: row.grammar_formation || null,
+    taxonomy: null,
+  };
+}
+
 async function getCatalogUncached(query: CatalogQuery): Promise<CatalogResult> {
   const client = createPublicClient();
   const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
@@ -256,8 +373,8 @@ async function getCatalogUncached(query: CatalogQuery): Promise<CatalogResult> {
 
   const search = cleanSearchTerm(query.search);
   const usesVocabularyTaxonomy = query.type === 'vocabulary';
-  const { data: matches, error: browseError } = await client.rpc(
-    'browse_catalog_items',
+  const { data: rows, error } = await client.rpc(
+    'browse_catalog_items_with_details',
     {
       p_level: query.level,
       p_content_type: query.type === 'all' ? null : query.type,
@@ -285,28 +402,13 @@ async function getCatalogUncached(query: CatalogQuery): Promise<CatalogResult> {
     },
   );
 
-  if (browseError) throw new Error(`Unable to browse catalog: ${browseError.message}`);
+  if (error) throw new Error(`Unable to browse catalog: ${error.message}`);
 
-  const ids = matches.map((match) => match.content_item_id);
-  const total = Number(matches[0]?.total_count ?? 0);
-  let data: ContentItemRow[] = [];
-  if (ids.length) {
-    const { data: matchedItems, error: itemsError } = await client
-      .from('content_items')
-      .select('id,content_type,level,word,reading,character,pattern')
-      .in('id', ids);
+  const items = (rows ?? []).map(rowToCatalogItem);
+  const total = Number((rows ?? [])[0]?.total_count ?? 0);
 
-    if (itemsError) throw new Error(`Unable to load catalog: ${itemsError.message}`);
-    const itemsById = new Map(matchedItems.map((item) => [item.id, item]));
-    data = ids.flatMap((id) => {
-      const item = itemsById.get(id);
-      return item ? [item] : [];
-    });
-  }
-
-  const maps = await getVersionMaps(data);
   return {
-    items: data.map((item) => toCatalogItem(item, maps)),
+    items,
     total,
     page,
     pageSize,
