@@ -154,6 +154,27 @@ test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async
   await expect(firstResult.getByText('Makanan & minuman')).toBeVisible();
 });
 
+test('vocabulary filters remain visible and contained on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/catalog?level=N5&type=vocabulary');
+
+  const filterControl = page.getByText('Filter vocabulary', { exact: true });
+  await expect(filterControl).toBeVisible();
+  await filterControl.click();
+
+  const filterForm = page
+    .locator('form')
+    .filter({ has: page.locator('[name="pos"]') });
+  await expect(filterForm).toBeVisible();
+  await expect(page.getByLabel('Kelas kata')).toBeVisible();
+  await expect(filterForm.locator('select[name="theme"]')).toBeVisible();
+
+  const box = await filterForm.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(375);
+});
+
 test('attribution remains publicly reachable', async ({ page }) => {
   await page.goto('/attributions');
 

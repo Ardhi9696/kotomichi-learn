@@ -24,8 +24,8 @@ export function CatalogVocabularyFilters({ query }: { query: CatalogQuery }) {
   ].filter((value) => value !== 'all').length;
 
   return (
-    <details className="group relative">
-      <summary className="flex h-[50px] cursor-pointer list-none items-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold transition hover:border-primary/40 hover:text-primary focus-visible:outline-2">
+    <details className="group relative w-full sm:w-auto">
+      <summary className="flex h-[50px] w-full cursor-pointer list-none items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold transition hover:border-primary/40 hover:text-primary focus-visible:outline-2 sm:w-auto">
         <FilterIcon />
         Filter vocabulary
         {activeCount ? (
@@ -35,7 +35,7 @@ export function CatalogVocabularyFilters({ query }: { query: CatalogQuery }) {
         ) : null}
       </summary>
       <form
-        className="absolute top-full right-0 z-20 mt-2 grid w-[min(42rem,calc(100vw-2.5rem))] gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card sm:grid-cols-2"
+        className="absolute top-full left-0 z-20 mt-2 grid w-[min(42rem,calc(100vw-2.5rem))] gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card sm:right-0 sm:left-auto sm:grid-cols-2"
         method="get"
       >
         <input name="level" type="hidden" value={query.level} />

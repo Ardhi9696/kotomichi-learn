@@ -89,14 +89,15 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         <CatalogFilters query={query} />
       </div>
 
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        {query.type === 'vocabulary' ? (
+          <CatalogVocabularyFilters query={query} />
+        ) : null}
+        <CatalogViewToggle query={query} />
+      </div>
+
       {result.items.length ? (
         <>
-          <div className="mt-6 flex flex-wrap justify-end gap-3">
-            {query.type === 'vocabulary' ? (
-              <CatalogVocabularyFilters query={query} />
-            ) : null}
-            <CatalogViewToggle query={query} />
-          </div>
           <section
             aria-label="Daftar materi"
             className={
