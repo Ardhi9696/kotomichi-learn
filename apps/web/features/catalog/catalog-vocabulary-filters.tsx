@@ -49,11 +49,6 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
   const [draft, setDraft] = useState<FilterValues>(() => initialFilterValues(query));
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Sync draft when query changes externally (e.g. URL navigation)
-  useEffect(() => {
-    setDraft(initialFilterValues(query));
-  }, [query.partOfSpeech, query.verbGroup, query.transitivity, query.adjectiveType, query.theme]);
-
   const updateDraft = useCallback((key: keyof FilterValues, value: string) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -141,7 +136,10 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
           />
           {/* Centered modal panel */}
           <div
+            aria-label="Filter vocabulary"
+            aria-modal="true"
             ref={panelRef}
+            role="dialog"
             className="fixed left-1/2 top-1/2 z-50 grid w-[min(42rem,calc(100vw-2.5rem))] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card sm:grid-cols-2"
           >
             <FilterSelect

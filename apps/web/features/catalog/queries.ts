@@ -12,7 +12,7 @@ import {
   type VocabularyTaxonomy,
   parseExamples,
 } from '@/features/catalog/types';
-import type { Database, Enums, Tables } from '@/lib/supabase/database.types';
+import type { Enums, Tables } from '@/lib/supabase/database.types';
 import { createPublicClient } from '@/lib/supabase/public';
 
 type ContentItemRow = Pick<
@@ -151,7 +151,7 @@ async function getVersionMaps(items: ContentItemRow[]) {
     grammarResult.error ??
     editorialResult.error ??
     taxonomyResult.error;
-  if (error) throw new Error(`Unable to load OpenJLPT content: ${error.message}`);
+  if (error) throw new Error(`Unable to load content: ${error.message}`);
 
   (vocabResult.data ?? []).forEach((row) =>
     maps.vocabulary.set(row.content_item_id, row),

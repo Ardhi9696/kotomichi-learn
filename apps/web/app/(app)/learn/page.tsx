@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { LearningSessionForm } from '@/features/learning/learning-session-form';
 import { getLearningHomeData } from '@/features/learning/queries';
 import { SESSION_ITEM_COUNTS } from '@/features/learning/session-schema';
+import { getStudyDecks } from '@/features/decks/queries';
 
 export const metadata: Metadata = {
   title: 'Mulai sesi belajar',
@@ -20,8 +21,11 @@ type LearnPageProps = {
 };
 
 export default async function LearnPage({ searchParams }: LearnPageProps) {
-  const data = await getLearningHomeData();
-  const params = await searchParams;
+  const [data, decks, params] = await Promise.all([
+    getLearningHomeData(),
+    getStudyDecks(),
+    searchParams,
+  ]);
   const error = Array.isArray(params.error) ? params.error[0] : params.error;
   const defaultItemCount: (typeof SESSION_ITEM_COUNTS)[number] =
     SESSION_ITEM_COUNTS.find((count) => count === data.dailyGoal) ?? 10;
@@ -78,6 +82,7 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
 
       <LearningSessionForm
         defaultItemCount={defaultItemCount}
+        decks={decks}
         targetLevel={data.targetLevel}
       />
     </div>

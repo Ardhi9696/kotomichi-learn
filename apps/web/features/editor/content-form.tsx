@@ -284,7 +284,7 @@ export function EditorialContentForm({
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
         <p className="text-xs leading-5 text-muted-foreground">
           {initial.origin === 'openjlpt'
-            ? 'Perubahan disimpan sebagai override; data OpenJLPT asli tetap utuh.'
+            ? 'Perubahan disimpan sebagai override; versi materi sebelumnya tetap utuh.'
             : 'Materi ini dibuat oleh tim editorial.'}
         </p>
         <SubmitButton pendingLabel="Menyimpan materi…">

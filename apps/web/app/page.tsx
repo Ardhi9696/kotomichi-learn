@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { ArrowIcon } from '@/components/arrow-icon';
+import { SiteFooter } from '@/components/site-footer';
+import { SiteHeader } from '@/components/site-header';
 
 const levels = [
   { level: 'N5', label: 'Fondasi', description: 'Mulai dari kosakata dan pola paling dasar.' },
@@ -23,14 +25,16 @@ const features = [
   },
   {
     number: '03',
-    title: 'Terbuka & transparan',
-    body: 'Materi kanonis berasal dari OpenJLPT dengan atribusi dan fallback Inggris yang jelas.',
+    title: 'Deck milikmu sendiri',
+    body: 'Import Master TSV, pelajari Recognition dan Production, lalu bagikan setelah review.',
   },
 ] as const;
 
 export default function HomePage() {
   return (
     <>
+      <SiteHeader />
+      <main id="main-content">
       <section className="paper-grid overflow-hidden border-b border-border">
         <div className="mx-auto grid min-h-[680px] max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
           <div className="reveal">
@@ -47,8 +51,8 @@ export default function HomePage() {
               .
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground">
-              Kotomichi menyusun 10.645 materi OpenJLPT menjadi perjalanan belajar yang
-              jernih—mulai dari kata pertama di N5 hingga nuansa lanjutan di N1.
+              Kotomichi membantumu menyusun deck vocabulary menjadi perjalanan belajar
+              yang jernih—mulai dari Recognition hingga Production.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -207,6 +211,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </main>
+      <SiteFooter />
     </>
   );
 }

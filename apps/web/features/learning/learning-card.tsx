@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SubmitButton } from '@/components/auth/submit-button';
 import type { ContentDetail } from '@/features/catalog/types';
 import type { QuizQuestion } from '@/features/learning/quiz';
+import { adjectiveTypeLabels } from '@/features/catalog/vocabulary-taxonomy';
 
 const typeLabels = {
   vocabulary: 'Vocabulary',
@@ -59,6 +60,14 @@ export function LearningCard({
               <span className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-muted-foreground">
                 {typeLabels[detail.type]}
               </span>
+              {detail.taxonomy?.adjectiveTypes.map((type) => (
+                <span
+                  className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-muted-foreground"
+                  key={type}
+                >
+                  {adjectiveTypeLabels[type]}
+                </span>
+              ))}
             </div>
             <h1
               className={

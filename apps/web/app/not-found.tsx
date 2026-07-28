@@ -7,7 +7,7 @@ export default function NotFound() {
         <p className="font-serif text-8xl font-bold text-primary">404</p>
         <h1 className="mt-4 font-serif text-3xl font-bold">Jalannya belum ditemukan</h1>
         <p className="mt-3 text-muted-foreground">
-          Materi mungkin sudah berpindah atau tidak termasuk snapshot OpenJLPT aktif.
+          Materi mungkin sudah berpindah, diarsipkan, atau tidak tersedia di deck aktif.
         </p>
         <Link
           className="mt-7 inline-flex rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover"

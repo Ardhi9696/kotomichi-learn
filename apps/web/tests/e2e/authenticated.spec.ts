@@ -141,7 +141,7 @@ for (const account of editorialAccounts) {
   });
 }
 
-test('superadmin can access source synchronization', async ({ page }) => {
+test('superadmin can access deck review queue', async ({ page }) => {
   const email = process.env.E2E_SUPERADMIN_EMAIL;
   const password = process.env.E2E_SUPERADMIN_PASSWORD;
   test.skip(
@@ -150,6 +150,6 @@ test('superadmin can access source synchronization', async ({ page }) => {
   );
 
   await login(page, email!, password!);
-  await page.goto('/admin/sources');
-  await expect(page.getByRole('heading', { name: 'Sinkronisasi sumber' })).toBeVisible();
+  await page.goto('/decks/review');
+  await expect(page.getByRole('heading', { name: 'Review Queue' })).toBeVisible();
 });

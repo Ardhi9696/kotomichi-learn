@@ -31,7 +31,7 @@ export default async function EditContentPage({
       <header className="mt-6 flex flex-wrap items-end justify-between gap-5 border-b border-border pb-8">
         <div>
           <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">
-            {content.origin === 'openjlpt' ? 'Override OpenJLPT' : 'Materi editorial'}
+            {content.origin === 'openjlpt' ? 'Override materi lama' : 'Materi editorial'}
           </p>
           <h1 className="mt-3 font-serif text-4xl font-bold">Edit materi</h1>
         </div>

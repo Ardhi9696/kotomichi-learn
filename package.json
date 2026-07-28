@@ -2,7 +2,7 @@
   "name": "kotomichi-learn",
   "version": "0.1.0",
   "private": true,
-  "description": "Web belajar JLPT N5–N1 dengan materi OpenJLPT yang disajikan melalui Supabase.",
+  "description": "Web belajar JLPT N5–N1 dengan deck Kotomichi dan deck pengguna.",
   "keywords": [
     "jlpt",
     "japanese",

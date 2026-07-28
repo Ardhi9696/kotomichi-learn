@@ -52,7 +52,7 @@ describe('AppShell', () => {
   });
 
   it('shows role-aware editorial and superadmin navigation', () => {
-    currentPathname = '/admin/sources';
+    currentPathname = '/decks/review';
     render(
       <AppShell
         viewer={{ ...learner, roles: ['editor', 'superadmin'] }}
@@ -63,7 +63,7 @@ describe('AppShell', () => {
 
     expect(screen.getByRole('link', { name: /Kelola materi/i })).toBeVisible();
     expect(
-      screen.getByRole('link', { name: /Sumber dataSnapshot OpenJLPT/i }),
+      screen.getByRole('link', { name: /Review DeckAntrean publikasi/i }),
     ).toHaveAttribute('aria-current', 'page');
   });
 

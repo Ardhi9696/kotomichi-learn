@@ -32,9 +32,11 @@ const contentTypeLabels = {
 
 export function LearningSessionForm({
   defaultItemCount,
+  decks = [],
   targetLevel,
 }: {
   defaultItemCount: (typeof SESSION_ITEM_COUNTS)[number];
+  decks?: { id: string; title: string; kind: 'official' | 'user' }[];
   targetLevel: Level;
 }) {
   const [contentTypes, setContentTypes] = useState<ContentType[]>([...CONTENT_TYPES]);
@@ -49,8 +51,37 @@ export function LearningSessionForm({
 
   return (
     <form action={createLearningSession} className="mt-10 grid gap-6">
+      <div className="grid gap-6 md:grid-cols-2">
+        <label className="grid gap-3 rounded-3xl border border-border bg-surface p-6 font-semibold shadow-card sm:p-8">
+          1. Deck
+          <select
+            className="h-12 rounded-xl border border-border bg-background px-4 font-normal"
+            name="deck_id"
+            required
+          >
+            <option value="">Pilih deck</option>
+            {decks.map((deck) => (
+              <option key={deck.id} value={deck.id}>
+                {deck.kind === 'official' ? 'Kotomichi · ' : ''}{deck.title}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-3 rounded-3xl border border-border bg-surface p-6 font-semibold shadow-card sm:p-8">
+          2. Arah kartu
+          <select
+            className="h-12 rounded-xl border border-border bg-background px-4 font-normal"
+            defaultValue="recognition"
+            name="study_direction"
+          >
+            <option value="recognition">Recognition · Jepang → makna</option>
+            <option value="production">Production · Indonesia → Jepang</option>
+            <option value="mixed">Mixed · bergantian</option>
+          </select>
+        </label>
+      </div>
       <fieldset className="rounded-3xl border border-border bg-surface p-6 shadow-card sm:p-8">
-        <legend className="px-2 text-lg font-semibold">1. Level</legend>
+        <legend className="px-2 text-lg font-semibold">3. Level</legend>
         <div className="mt-4 grid grid-cols-5 gap-2">
           {LEVELS.map((level) => (
             <label className="cursor-pointer" key={level}>
@@ -71,7 +102,7 @@ export function LearningSessionForm({
 
       <div className="grid gap-6 md:grid-cols-2">
         <fieldset className="rounded-3xl border border-border bg-surface p-6 shadow-card sm:p-8">
-          <legend className="px-2 text-lg font-semibold">2. Jenis materi</legend>
+          <legend className="px-2 text-lg font-semibold">4. Jenis materi</legend>
           <div className="mt-4 grid gap-3">
             {CONTENT_TYPES.map((type) => (
               <label className="cursor-pointer" key={type}>
@@ -142,7 +173,7 @@ export function LearningSessionForm({
         </fieldset>
 
         <fieldset className="rounded-3xl border border-border bg-surface p-6 shadow-card sm:p-8">
-          <legend className="px-2 text-lg font-semibold">3. Jumlah flashcard</legend>
+          <legend className="px-2 text-lg font-semibold">5. Jumlah flashcard</legend>
           <div className="mt-4 grid grid-cols-2 gap-3">
             {SESSION_ITEM_COUNTS.map((count) => (
               <label className="cursor-pointer" key={count}>
@@ -163,7 +194,9 @@ export function LearningSessionForm({
       </div>
 
       <div className="mx-auto w-full max-w-sm">
-        <SubmitButton pendingLabel="Menyiapkan sesi…">Mulai sesi belajar</SubmitButton>
+        <SubmitButton pendingLabel="Menyiapkan sesi…" disabled={!decks.length}>
+          {decks.length ? 'Mulai sesi belajar' : 'Belum ada deck tersedia'}
+        </SubmitButton>
       </div>
     </form>
   );

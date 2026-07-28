@@ -143,11 +143,11 @@ test('semantic status surfaces use their dark palette', async ({ page }) => {
   await expect(success).toHaveCSS('border-color', 'rgb(49, 92, 65)');
 });
 
-test('learner can open the N5 catalog and a material detail', async ({ page }) => {
+test('learner can open the catalog after the legacy archive rollout', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByRole('navigation', { name: 'Navigasi utama' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Materi', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Library Deck', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Mulai sekarang' })).toBeVisible();
   await expect(
     page.getByRole('heading', { name: /Temukan jalanmu menuju bahasa Jepang/i }),
@@ -155,20 +155,15 @@ test('learner can open the N5 catalog and a material detail', async ({ page }) =
 
   await page.getByRole('link', { name: 'Mulai dari N5' }).click();
   await expect(page).toHaveURL(/\/catalog\?level=N5&type=all/);
-  await expect(page.getByText(/materi ditemukan/i)).toBeVisible();
-  await page.getByRole('link', { name: 'Tampilan list' }).click();
+  await expect(page.getByText('0 materi')).toBeVisible();
+  await page.getByRole('button', { name: 'Tampilan list' }).click();
   await expect(page).toHaveURL(/view=list/);
-  await expect(page.getByRole('link', { name: 'Tampilan list' })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Tampilan list' })).toHaveAttribute(
     'aria-current',
     'page',
   );
 
-  const firstDetailLink = page.getByRole('link', { name: /^Lihat detail / }).first();
-  await expect(firstDetailLink).toBeVisible();
-  await firstDetailLink.click();
-
-  await expect(page.getByText('Makna', { exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Kembali ke N5/i })).toBeVisible();
+  await expect(page.getByText('Materi belum ditemukan')).toBeVisible();
 });
 
 test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async ({
@@ -176,13 +171,11 @@ test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async
 }) => {
   await page.goto('/catalog?level=N5&type=vocabulary');
 
-  await page.getByText('Filter vocabulary').click();
-  const taxonomyForm = page
-    .locator('form')
-    .filter({ has: page.locator('[name="pos"]') });
+  await page.getByRole('button', { name: 'Filter' }).click();
+  const taxonomyForm = page.getByRole('dialog', { name: 'Filter vocabulary' });
   await page.getByLabel('Kelas kata').selectOption('verb');
   await page.getByLabel('Kelompok verba').selectOption('ichidan');
-  await taxonomyForm.locator('select[name="theme"]').selectOption('food_drink');
+  await taxonomyForm.getByLabel('Tema').selectOption('food_drink');
   await taxonomyForm
     .getByRole('button', { name: 'Terapkan' })
     .click();
@@ -190,25 +183,21 @@ test('learner can filter N5 vocabulary by grammatical taxonomy and theme', async
   await expect(page).toHaveURL(/pos=verb/);
   await expect(page).toHaveURL(/verb=ichidan/);
   await expect(page).toHaveURL(/theme=food_drink/);
-  const firstResult = page.locator('article').first();
-  await expect(firstResult.getByText('Kata kerja')).toBeVisible();
-  await expect(firstResult.getByText('Makanan & minuman')).toBeVisible();
+  await expect(page.getByText('Materi belum ditemukan')).toBeVisible();
 });
 
 test('vocabulary filters remain visible and contained on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/catalog?level=N5&type=vocabulary');
 
-  const filterControl = page.getByText('Filter vocabulary', { exact: true });
+  const filterControl = page.getByRole('button', { name: 'Filter' });
   await expect(filterControl).toBeVisible();
   await filterControl.click();
 
-  const filterForm = page
-    .locator('form')
-    .filter({ has: page.locator('[name="pos"]') });
+  const filterForm = page.getByRole('dialog', { name: 'Filter vocabulary' });
   await expect(filterForm).toBeVisible();
   await expect(page.getByLabel('Kelas kata')).toBeVisible();
-  await expect(filterForm.locator('select[name="theme"]')).toBeVisible();
+  await expect(filterForm.getByLabel('Tema')).toBeVisible();
 
   const box = await filterForm.boundingBox();
   expect(box).not.toBeNull();
@@ -216,12 +205,11 @@ test('vocabulary filters remain visible and contained on mobile', async ({ page 
   expect(box!.x + box!.width).toBeLessThanOrEqual(375);
 });
 
-test('attribution remains publicly reachable', async ({ page }) => {
+test('content rights policy remains publicly reachable', async ({ page }) => {
   await page.goto('/attributions');
 
-  await expect(page.getByRole('heading', { name: 'Atribusi & lisensi' })).toBeVisible();
-  await expect(page.getByText('OpenJLPT', { exact: true })).toBeVisible();
-  await expect(page.getByText(/bukan daftar resmi JLPT/i)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Materi resmi © Kotomichi' })).toBeVisible();
+  await expect(page.getByText(/wajib menyatakan bahwa mereka memiliki hak/i)).toBeVisible();
 });
 
 test('anonymous learner is redirected from dashboard to login', async ({ page }) => {

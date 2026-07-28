@@ -4,9 +4,11 @@ import { useFormStatus } from 'react-dom';
 
 export function SubmitButton({
   children,
+  disabled = false,
   pendingLabel = 'Memproses…',
 }: {
   children: React.ReactNode;
+  disabled?: boolean;
   pendingLabel?: string;
 }) {
   const { pending } = useFormStatus();
@@ -14,7 +16,7 @@ export function SubmitButton({
   return (
     <button
       className="h-12 w-full rounded-xl bg-primary px-5 font-semibold text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 disabled:cursor-wait disabled:opacity-65"
-      disabled={pending}
+      disabled={disabled || pending}
       type="submit"
     >
       {pending ? pendingLabel : children}

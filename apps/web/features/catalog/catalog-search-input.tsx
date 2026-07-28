@@ -9,29 +9,28 @@ export function CatalogSearchInput({ defaultValue = '' }: { defaultValue?: strin
   const searchParams = useSearchParams();
   const [value, setValue] = useState(defaultValue);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Use refs for router/pathname/searchParams so the effect only fires on `value` change
   const searchParamsRef = useRef(searchParams);
   const pathnameRef = useRef(pathname);
   const routerRef = useRef(router);
-  searchParamsRef.current = searchParams;
-  pathnameRef.current = pathname;
-  routerRef.current = router;
-
-  // Track whether this is the initial mount to skip the first effect
-  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    // Skip the effect on initial mount — the URL already has the correct value
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+    searchParamsRef.current = searchParams;
+    pathnameRef.current = pathname;
+    routerRef.current = router;
+  }, [pathname, router, searchParams]);
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  function updateSearch(nextValue: string) {
+    setValue(nextValue);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       const params = new URLSearchParams(searchParamsRef.current.toString());
-      if (value) params.set('q', value);
+      if (nextValue) params.set('q', nextValue);
       else params.delete('q');
       params.set('page', '1');
       routerRef.current.replace(
@@ -39,10 +38,7 @@ export function CatalogSearchInput({ defaultValue = '' }: { defaultValue?: strin
         { scroll: false },
       );
     }, 300);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [value]);
+  }
 
   return (
     <div className="relative">
@@ -57,7 +53,7 @@ export function CatalogSearchInput({ defaultValue = '' }: { defaultValue?: strin
       </svg>
       <input
         className="h-12 w-full rounded-xl border border-border bg-background pl-10 pr-4 font-normal placeholder:text-muted-foreground/70 focus:border-primary focus:outline-2"
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => updateSearch(e.target.value)}
         placeholder="Cari materi … 食べる, たべる, eat…"
         type="search"
         value={value}

@@ -156,8 +156,8 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
                       {item.origin === 'editorial'
                         ? 'Editorial'
                         : item.hasOverride
-                          ? 'OpenJLPT + override'
-                          : 'OpenJLPT'}
+                          ? 'Materi lama + override'
+                          : 'Materi lama'}
                     </span>
                     {!item.isActive ? (
                       <span className="rounded-full bg-danger-soft px-2.5 py-1 text-xs font-bold text-danger-foreground">

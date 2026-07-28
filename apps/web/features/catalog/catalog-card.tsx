@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowIcon } from '@/components/arrow-icon';
 import type { CatalogItem, CatalogViewMode } from '@/features/catalog/types';
 import {
+  adjectiveTypeLabels,
   partOfSpeechLabels,
   themeLabels,
 } from '@/features/catalog/vocabulary-taxonomy';
@@ -29,6 +30,7 @@ function TaxonomyBadges({ item }: { item: CatalogItem }) {
   if (!item.taxonomy || item.taxonomy.needsReview) return null;
   const labels = [
     ...item.taxonomy.partsOfSpeech.map((value) => partOfSpeechLabels[value]),
+    ...item.taxonomy.adjectiveTypes.map((value) => adjectiveTypeLabels[value]),
     ...item.taxonomy.themes.slice(0, 1).map((value) => themeLabels[value]),
   ];
   if (!labels.length) return null;

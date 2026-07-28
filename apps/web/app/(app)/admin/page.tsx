@@ -46,9 +46,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <div className="flex flex-wrap gap-3">
           <Link
             className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground"
-            href="/admin/sources"
+            href="/decks/review"
           >
-            Sinkronisasi sumber
+            Review deck
           </Link>
           <Link
             className="rounded-full border border-primary bg-primary-soft px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground"

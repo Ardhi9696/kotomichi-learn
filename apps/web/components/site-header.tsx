@@ -5,9 +5,8 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import type { ThemePreference } from '@/features/settings/profile-schema';
 
 const navigation = [
-  { href: '/catalog', label: 'Materi' },
+  { href: '/decks', label: 'Library Deck' },
   { href: '/learn', label: 'Mulai belajar' },
-  { href: '/attributions', label: 'Tentang sumber' },
 ] as const;
 
 export function SiteHeader({

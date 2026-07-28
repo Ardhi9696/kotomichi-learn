@@ -17,6 +17,8 @@ const contentTypeSchema = z.enum(CONTENT_TYPES);
 
 export const createLearningSessionSchema = z
   .object({
+    deckId: z.uuid('Pilih deck yang tersedia.'),
+    studyDirection: z.enum(['recognition', 'production', 'mixed']),
     level: levelSchema,
     contentTypes: z.array(contentTypeSchema).min(1).max(CONTENT_TYPES.length),
     itemCount: z.coerce

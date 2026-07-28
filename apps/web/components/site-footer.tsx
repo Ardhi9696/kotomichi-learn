@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { BrandMark } from '@/components/brand-mark';
 
 export function SiteFooter() {
@@ -12,23 +10,11 @@ export function SiteFooter() {
             Kotomichi Learn
           </div>
           <p className="mt-4 max-w-xl text-sm text-muted-foreground">
-            Jalur belajar bahasa Jepang berbasis data terbuka OpenJLPT. Daftar level
-            merupakan perkiraan komunitas dan bukan daftar resmi JLPT.
+            Materi resmi © Kotomichi. Penerbit deck publik wajib memiliki hak atas
+            seluruh konten yang dibagikan.
           </p>
         </div>
-        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
-          <Link className="hover:text-primary" href="/attributions">
-            Atribusi & lisensi
-          </Link>
-          <a
-            className="hover:text-primary"
-            href="https://github.com/evanclan/OpenJLPT"
-            rel="noreferrer"
-            target="_blank"
-          >
-            Sumber data
-          </a>
-        </div>
+        <p className="text-sm font-medium">© Kotomichi</p>
       </div>
     </footer>
   );

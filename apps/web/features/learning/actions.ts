@@ -4,7 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { getContentDetail } from '@/features/catalog/queries';
 import { isLocale, type ContentType, type Locale } from '@/features/catalog/types';
 import {
   evaluateQuizAnswer,
@@ -16,6 +15,7 @@ import {
   learningSessionIdSchema,
   sessionItemPositionSchema,
 } from '@/features/learning/session-schema';
+import { getLearningContentDetail } from '@/features/learning/queries';
 import {
   calculateReviewUpdate,
   isReviewRatingAllowed,
@@ -43,6 +43,8 @@ export async function createLearningSession(formData: FormData): Promise<never> 
     ),
   ];
   const result = createLearningSessionSchema.safeParse({
+    deckId: formString(formData, 'deck_id'),
+    studyDirection: formString(formData, 'study_direction'),
     level: formString(formData, 'level'),
     contentTypes,
     itemCount: formString(formData, 'item_count'),
@@ -71,57 +73,24 @@ export async function createLearningSession(formData: FormData): Promise<never> 
     redirect('/onboarding');
   }
 
-  const contentResults = await Promise.all(
-    result.data.contentTypes.map(async (contentType) => {
-      const appliesVocabularyFilter = contentType === 'vocabulary';
-      const { data, error } = await supabase.rpc('get_learning_candidates', {
-        p_level: result.data.level,
-        p_content_type: contentType,
-        p_parts_of_speech:
-          appliesVocabularyFilter && result.data.vocabularyPartOfSpeech !== 'all'
-            ? [result.data.vocabularyPartOfSpeech]
-            : [],
-        p_verb_groups:
-          appliesVocabularyFilter && result.data.vocabularyVerbGroup !== 'all'
-            ? [result.data.vocabularyVerbGroup]
-            : [],
-        p_transitivities:
-          appliesVocabularyFilter && result.data.vocabularyTransitivity !== 'all'
-            ? [result.data.vocabularyTransitivity]
-            : [],
-        p_adjective_types:
-          appliesVocabularyFilter && result.data.vocabularyAdjectiveType !== 'all'
-            ? [result.data.vocabularyAdjectiveType]
-            : [],
-        p_themes:
-          appliesVocabularyFilter && result.data.vocabularyTheme !== 'all'
-            ? [result.data.vocabularyTheme]
-            : [],
-        p_limit: result.data.itemCount,
-      });
-      return {
-        data: data?.map((item) => ({ id: item.content_item_id })) ?? null,
-        error,
-      };
-    }),
+  const { data: candidates, error: candidatesError } = await supabase.rpc(
+    'get_deck_learning_candidates',
+    {
+      p_deck_id: result.data.deckId,
+      p_level: result.data.level,
+      p_adjective_types:
+        result.data.vocabularyAdjectiveType === 'all'
+          ? []
+          : [result.data.vocabularyAdjectiveType],
+      p_limit: result.data.itemCount,
+    },
   );
 
-  if (contentResults.some(({ error }) => error)) {
+  if (candidatesError) {
     learningError('Materi sesi belum dapat disiapkan. Coba kembali.');
   }
 
-  const contentItems: { id: string }[] = [];
-  for (let index = 0; contentItems.length < result.data.itemCount; index += 1) {
-    let foundItem = false;
-    for (const contentResult of contentResults) {
-      const item = contentResult.data?.[index];
-      if (!item) continue;
-      contentItems.push(item);
-      foundItem = true;
-      if (contentItems.length === result.data.itemCount) break;
-    }
-    if (!foundItem) break;
-  }
+  const contentItems = (candidates ?? []).map((item) => ({ id: item.content_item_id }));
 
   if (!contentItems.length) learningError('Belum ada materi aktif untuk pilihan tersebut.');
 
@@ -131,7 +100,11 @@ export async function createLearningSession(formData: FormData): Promise<never> 
     id: sessionId,
     user_id: user.id,
     level: result.data.level,
-    content_types: sessionContentTypes,
+    content_types: sessionContentTypes.includes('vocabulary')
+      ? ['vocabulary']
+      : sessionContentTypes,
+    deck_id: result.data.deckId,
+    study_direction: result.data.studyDirection,
     target_item_count: contentItems.length,
   });
 
@@ -143,6 +116,10 @@ export async function createLearningSession(formData: FormData): Promise<never> 
       user_id: user.id,
       content_item_id: item.id,
       position,
+      card_direction:
+        result.data.studyDirection === 'mixed'
+          ? position % 2 === 0 ? 'recognition' : 'production'
+          : result.data.studyDirection,
     })),
   );
 
@@ -178,26 +155,31 @@ export async function submitQuiz(
   const sessionId = sessionIdResult.data;
   const position = positionResult.data;
   const { supabase, user } = await requireUser();
-  const { data: item, error: itemError } = await supabase
-    .from('learning_session_items')
-    .select('content_item_id,client_attempt_id,completed_at')
-    .eq('session_id', sessionId)
-    .eq('user_id', user.id)
-    .eq('position', position)
-    .maybeSingle();
+  const [
+    { data: item, error: itemError },
+    { data: profile, error: profileError },
+  ] = await Promise.all([
+    supabase
+      .from('learning_session_items')
+      .select('content_item_id,client_attempt_id,completed_at')
+      .eq('session_id', sessionId)
+      .eq('user_id', user.id)
+      .eq('position', position)
+      .maybeSingle(),
+    supabase
+      .from('profiles')
+      .select('content_locale')
+      .eq('id', user.id)
+      .maybeSingle(),
+  ]);
 
   if (itemError || !item || item.completed_at) {
     learningError('Item kuis tidak tersedia.');
   }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('content_locale')
-    .eq('id', user.id)
-    .maybeSingle();
+  if (profileError) learningError('Bahasa konten belum dapat dimuat.');
   const localeValue = profile?.content_locale;
   const locale: Locale = isLocale(localeValue) ? localeValue : 'en';
-  const detail = await getContentDetail(item.content_item_id, locale);
+  const detail = await getLearningContentDetail(supabase, item.content_item_id, locale);
   const expectedQuestionType = getQuizQuestionType(detail, position);
 
   if (submissionResult.data.questionType !== expectedQuestionType) {
@@ -209,34 +191,89 @@ export async function submitQuiz(
     expectedQuestionType,
     submissionResult.data.answer,
   );
-  const { error: attemptError } = await supabase.from('quiz_attempts').insert({
-    client_attempt_id: item.client_attempt_id,
-    session_id: sessionId,
-    user_id: user.id,
-    content_item_id: item.content_item_id,
-    question_type: expectedQuestionType,
-    answer_text: submissionResult.data.answer,
-    is_correct: isCorrect,
-    response_time_ms: submissionResult.data.responseTimeMs,
-  });
+  const [{ error: attemptError }, { error: studiedError }] = await Promise.all([
+    supabase.from('quiz_attempts').insert({
+      client_attempt_id: item.client_attempt_id,
+      session_id: sessionId,
+      user_id: user.id,
+      content_item_id: item.content_item_id,
+      question_type: expectedQuestionType,
+      answer_text: submissionResult.data.answer,
+      is_correct: isCorrect,
+      response_time_ms: submissionResult.data.responseTimeMs,
+    }),
+    supabase
+      .from('learning_session_items')
+      .update({ studied_at: new Date().toISOString() })
+      .eq('session_id', sessionId)
+      .eq('user_id', user.id)
+      .eq('position', position)
+      .is('studied_at', null)
+      .is('completed_at', null),
+  ]);
 
   if (attemptError && attemptError.code !== '23505') {
     learningError('Jawaban kuis belum dapat disimpan.');
   }
 
-  const { error: studiedError } = await supabase
-    .from('learning_session_items')
-    .update({ studied_at: new Date().toISOString() })
-    .eq('session_id', sessionId)
-    .eq('user_id', user.id)
-    .eq('position', position)
-    .is('studied_at', null)
-    .is('completed_at', null);
-
   if (studiedError) learningError('Progres kuis belum dapat disimpan.');
 
-  revalidatePath(`/learn/${sessionId}`);
   redirect(`/learn/${sessionId}`);
+}
+
+export async function rateProductionItem(
+  rawSessionId: string,
+  rawPosition: number,
+  formData: FormData,
+): Promise<never> {
+  const sessionId = learningSessionIdSchema.safeParse(rawSessionId);
+  const position = sessionItemPositionSchema.safeParse(rawPosition);
+  const rating = reviewRatingSchema.safeParse(formString(formData, 'rating'));
+  if (!sessionId.success || !position.success || !rating.success) {
+    learningError('Penilaian Production tidak valid.');
+  }
+
+  const { supabase, user } = await requireUser();
+  const { data: item, error } = await supabase
+    .from('learning_session_items')
+    .select('content_item_id,client_attempt_id,card_direction,completed_at')
+    .eq('session_id', sessionId.data)
+    .eq('user_id', user.id)
+    .eq('position', position.data)
+    .maybeSingle();
+  if (error || !item || item.completed_at || item.card_direction !== 'production') {
+    learningError('Kartu Production tidak tersedia.');
+  }
+
+  const isCorrect = rating.data !== 'forgot';
+  const [{ error: attemptError }, { error: studiedError }] = await Promise.all([
+    supabase.from('quiz_attempts').insert({
+      client_attempt_id: item.client_attempt_id,
+      session_id: sessionId.data,
+      user_id: user.id,
+      content_item_id: item.content_item_id,
+      question_type: 'production_recall',
+      answer_text: null,
+      is_correct: isCorrect,
+      response_time_ms: 0,
+    }),
+    supabase
+      .from('learning_session_items')
+      .update({ studied_at: new Date().toISOString() })
+      .eq('session_id', sessionId.data)
+      .eq('user_id', user.id)
+      .eq('position', position.data),
+  ]);
+  if (attemptError && attemptError.code !== '23505') {
+    learningError('Penilaian Production belum dapat disimpan.');
+  }
+  if (studiedError) learningError('Progres Production belum dapat disimpan.');
+
+  return completeLearningItem(
+    sessionId.data,
+    position.data,
+    formData,
+  );
 }
 
 export async function completeLearningItem(
@@ -264,26 +301,30 @@ export async function completeLearningItem(
 
   if (itemError || !item) learningError('Item sesi tidak ditemukan.');
 
-  const { data: attempt, error: attemptError } = await supabase
-    .from('quiz_attempts')
-    .select('id,is_correct')
-    .eq('user_id', user.id)
-    .eq('client_attempt_id', item.client_attempt_id)
-    .maybeSingle();
+  const [
+    { data: attempt, error: attemptError },
+    { data: currentProgress, error: progressError },
+  ] = await Promise.all([
+    supabase
+      .from('quiz_attempts')
+      .select('id,is_correct')
+      .eq('user_id', user.id)
+      .eq('client_attempt_id', item.client_attempt_id)
+      .maybeSingle(),
+    supabase
+      .from('learning_progress')
+      .select(
+        'status,attempts_count,correct_count,review_count,interval_days,ease_factor,mastered_at',
+      )
+      .eq('user_id', user.id)
+      .eq('content_item_id', item.content_item_id)
+      .maybeSingle(),
+  ]);
 
   if (attemptError || !attempt) learningError('Selesaikan kuis sebelum melanjutkan.');
   if (!isReviewRatingAllowed(ratingResult.data, attempt.is_correct)) {
     learningError('Jawaban salah hanya dapat dinilai Lupa atau Sulit.');
   }
-
-  const { data: currentProgress, error: progressError } = await supabase
-    .from('learning_progress')
-    .select(
-      'status,attempts_count,correct_count,review_count,interval_days,ease_factor,mastered_at',
-    )
-    .eq('user_id', user.id)
-    .eq('content_item_id', item.content_item_id)
-    .maybeSingle();
 
   if (progressError) learningError('Progres sebelumnya belum dapat dimuat.');
 
@@ -308,53 +349,8 @@ export async function completeLearningItem(
 
   if (applyError) learningError('Jadwal review belum dapat disimpan.');
 
-  const completedAt = new Date().toISOString();
-  const [
-    { count: completedItemCount, error: completedCountError },
-    { count: correctItemCount, error: correctCountError },
-    { data: session, error: sessionError },
-  ] = await Promise.all([
-    supabase
-      .from('learning_session_items')
-      .select('session_id', { count: 'exact', head: true })
-      .eq('session_id', sessionId)
-      .eq('user_id', user.id)
-      .not('completed_at', 'is', null),
-    supabase
-      .from('quiz_attempts')
-      .select('id', { count: 'exact', head: true })
-      .eq('session_id', sessionId)
-      .eq('user_id', user.id)
-      .eq('is_correct', true),
-    supabase
-      .from('learning_sessions')
-      .select('target_item_count')
-      .eq('id', sessionId)
-      .eq('user_id', user.id)
-      .maybeSingle(),
-  ]);
-
-  if (completedCountError || correctCountError || sessionError || !session) {
-    learningError('Ringkasan sesi belum dapat diperbarui.');
-  }
-
-  const completedCount = completedItemCount ?? 0;
-  const isComplete = completedCount >= session.target_item_count;
-  const { error: sessionUpdateError } = await supabase
-    .from('learning_sessions')
-    .update({
-      completed_item_count: completedCount,
-      correct_item_count: correctItemCount ?? 0,
-      completed_at: isComplete ? completedAt : null,
-    })
-    .eq('id', sessionId)
-    .eq('user_id', user.id);
-
-  if (sessionUpdateError) learningError('Ringkasan sesi belum dapat disimpan.');
-
   revalidatePath('/dashboard');
   revalidatePath('/learn');
-  revalidatePath(`/learn/${sessionId}`);
   redirect(`/learn/${sessionId}`);
 }
 

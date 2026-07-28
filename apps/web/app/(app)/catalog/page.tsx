@@ -21,7 +21,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Katalog materi',
-  description: 'Jelajahi vocabulary, kanji, dan grammar OpenJLPT dari N5 hingga N1.',
+  description: 'Jelajahi materi aktif Kotomichi dari N5 hingga N1.',
 };
 
 type CatalogPageProps = {
@@ -72,14 +72,13 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       <header className="grid gap-5 border-b border-border pb-10 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="text-xs font-bold tracking-[0.22em] text-primary uppercase">
-            Katalog OpenJLPT
+            Katalog Kotomichi
           </p>
           <h1 className="mt-3 font-serif text-4xl leading-tight font-bold tracking-tight sm:text-5xl">
             Pilih materi untuk langkah berikutnya.
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Jelajahi materi kanonis dalam bahasa Inggris. Terjemahan Indonesia dan Korea
-            akan muncul otomatis setelah melewati proses review.
+            Jelajahi materi dari deck resmi dan deck publik yang telah melewati review.
           </p>
         </div>
       </header>

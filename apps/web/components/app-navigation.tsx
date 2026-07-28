@@ -61,9 +61,16 @@ const learnerNavigation: NavItem[] = [
   },
   {
     href: '/catalog',
-    label: 'Materi',
-    description: 'Jelajahi N5–N1',
+    label: 'Katalog',
+    description: 'Jelajahi materi aktif',
     icon: 'catalog',
+    match: 'prefix',
+  },
+  {
+    href: '/decks',
+    label: 'Decks',
+    description: 'Library dan deck milikmu',
+    icon: 'source',
     match: 'prefix',
   },
   {
@@ -76,6 +83,13 @@ const learnerNavigation: NavItem[] = [
 ];
 
 const editorialNavigation: NavItem[] = [
+  {
+    href: '/decks/review',
+    label: 'Review Deck',
+    description: 'Antrean publikasi',
+    icon: 'source',
+    match: 'prefix',
+  },
   {
     href: '/editor',
     label: 'Kelola materi',
@@ -106,13 +120,6 @@ const adminNavigation: NavItem[] = [
     description: 'Role dan sistem',
     icon: 'admin',
     match: 'exact',
-  },
-  {
-    href: '/admin/sources',
-    label: 'Sumber data',
-    description: 'Snapshot OpenJLPT',
-    icon: 'source',
-    match: 'prefix',
   },
 ];
 

@@ -22,7 +22,7 @@ const levelDescriptions = {
 const localeOptions = [
   { value: 'id', label: 'Indonesia', note: 'Fallback ke Inggris jika belum tersedia' },
   { value: 'ko', label: '한국어', note: '영어 콘텐츠로 자동 대체' },
-  { value: 'en', label: 'English', note: 'Canonical OpenJLPT content' },
+  { value: 'en', label: 'English', note: 'Gunakan makna Inggris jika tersedia' },
 ] as const;
 
 type OnboardingPageProps = {

@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { completeLearningItem, submitQuiz } from '@/features/learning/actions';
+import {
+  completeLearningItem,
+  rateProductionItem,
+  submitQuiz,
+} from '@/features/learning/actions';
 import { LearningCard } from '@/features/learning/learning-card';
 import { LearningFeedback } from '@/features/learning/learning-feedback';
+import { ProductionCard } from '@/features/learning/production-card';
 import { getLearningSession } from '@/features/learning/queries';
 
 export const metadata: Metadata = {
@@ -68,6 +73,11 @@ export default async function LearningSessionPage({ params }: LearningSessionPag
     data.session.id,
     data.currentItem.position,
   );
+  const rateProduction = rateProductionItem.bind(
+    null,
+    data.session.id,
+    data.currentItem.position,
+  );
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
@@ -114,6 +124,13 @@ export default async function LearningSessionPage({ params }: LearningSessionPag
           detail={data.currentItem.detail}
           isCorrect={data.currentItem.phase.isCorrect}
           onRate={continueToNextItem}
+        />
+      ) : null}
+
+      {data.currentItem.phase.name === 'production' ? (
+        <ProductionCard
+          detail={data.currentItem.detail}
+          onRate={rateProduction}
         />
       ) : null}
     </div>

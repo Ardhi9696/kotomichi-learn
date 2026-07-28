@@ -1,0 +1,61 @@
+jp	reading	display	verb_class	transitivity	pair	frame	ko	en	id	example_jp	example_ko	theme
+開ける	あける	開(あ)ける	一段(いちだん)	他動詞(たどうし)	開(あ)く	Nを開(あ)ける	열다	to open something	membuka sesuatu	窓(まど)を開(あ)ける。	창문을 열다.	pair_open
+開く	あく	開(あ)く	五段(ごだん)	自動詞(じどうし)	開(あ)ける	Nが開(あ)く	열리다; 문을 열다	to open; become open	terbuka; mulai buka	店(みせ)は九時(くじ)に開(あ)く。	가게는 9시에 연다.	pair_open
+閉める	しめる	閉(し)める	一段(いちだん)	他動詞(たどうし)	閉(し)まる	Nを閉(し)める	닫다	to close something	menutup sesuatu	窓(まど)を閉(し)める。	창문을 닫다.	pair_close
+閉まる	しまる	閉(し)まる	五段(ごだん)	自動詞(じどうし)	閉(し)める	Nが閉(し)まる	닫히다	to close; become closed	tertutup	店(みせ)は八時(はちじ)に閉(し)まる。	가게는 8시에 닫는다.	pair_close
+始める	はじめる	始(はじ)める	一段(いちだん)	他動詞(たどうし)	始(はじ)まる	Nを始(はじ)める	시작하다	to start something	memulai sesuatu	勉強(べんきょう)を始(はじ)める。	공부를 시작하다.	pair_start
+始まる	はじまる	始(はじ)まる	五段(ごだん)	自動詞(じどうし)	始(はじ)める	Nが始(はじ)まる	시작되다	to begin; start	dimulai; mulai	授業(じゅぎょう)が始(はじ)まる。	수업이 시작된다.	pair_start
+終える	おえる	終(お)える	一段(いちだん)	他動詞(たどうし)	終(お)わる	Nを終(お)える	끝내다	to finish something	menyelesaikan sesuatu	仕事(しごと)を終(お)える。	일을 끝내다.	pair_finish
+終わる	おわる	終(お)わる	五段(ごだん)	自動詞(じどうし)	終(お)える	Nが終(お)わる	끝나다	to end; finish	berakhir; selesai	試験(しけん)が終(お)わる。	시험이 끝난다.	pair_finish
+入れる	いれる	入(い)れる	一段(いちだん)	他動詞(たどうし)	入(はい)る	Nを場所(ばしょ)に入(い)れる	넣다	to put in; insert	memasukkan	鞄(かばん)に本(ほん)を入(い)れる。	가방에 책을 넣다.	pair_enter
+入る	はいる	入(はい)る	五段(ごだん)・注意(ちゅうい)	自動詞(じどうし)	入(い)れる	Nが場所(ばしょ)に入(はい)る	들어가다	to enter; go in	masuk	部屋(へや)に入(はい)る。	방에 들어가다.	pair_enter
+出す	だす	出(だ)す	五段(ごだん)	他動詞(たどうし)	出(で)る	Nを場所(ばしょ)から出(だ)す	꺼내다; 내다	to take out; put out	mengeluarkan	鞄(かばん)から本(ほん)を出(だ)す。	가방에서 책을 꺼내다.	pair_exit
+出る	でる	出(で)る	一段(いちだん)	自動詞(じどうし)	出(だ)す	場所(ばしょ)を／から出(で)る	나가다; 나오다	to leave; come out	keluar	家(いえ)を出(で)る。	집을 나가다.	pair_exit
+つける	つける	つける	一段(いちだん)	他動詞(たどうし)	つく	Nをつける	켜다; 붙이다	to turn on; attach	menyalakan; memasang	テレビをつける。	텔레비전을 켜다.	pair_switch
+つく	つく	つく	五段(ごだん)	自動詞(じどうし)	つける	Nがつく	켜지다; 붙다	to turn on; become attached	menyala; menempel	電気(でんき)がつく。	불이 켜진다.	pair_switch
+消す	けす	消(け)す	五段(ごだん)	他動詞(たどうし)	消(き)える	Nを消(け)す	끄다; 지우다	to turn off; erase	mematikan; menghapus	電気(でんき)を消(け)す。	불을 끄다.	pair_disappear
+消える	きえる	消(き)える	一段(いちだん)	自動詞(じどうし)	消(け)す	Nが消(き)える	꺼지다; 사라지다	to go out; disappear	padam; menghilang	電気(でんき)が消(き)える。	불이 꺼진다.	pair_disappear
+落とす	おとす	落(お)とす	五段(ごだん)	他動詞(たどうし)	落(お)ちる	Nを落(お)とす	떨어뜨리다	to drop something	menjatuhkan	鍵(かぎ)を落(お)とす。	열쇠를 떨어뜨리다.	pair_fall
+落ちる	おちる	落(お)ちる	一段(いちだん)	自動詞(じどうし)	落(お)とす	Nが落(お)ちる	떨어지다	to fall; drop	jatuh	葉(は)が落(お)ちる。	잎이 떨어진다.	pair_fall
+上げる	あげる	上(あ)げる	一段(いちだん)	他動詞(たどうし)	上(あ)がる	Nを上(あ)げる	올리다	to raise; increase something	menaikkan	値段(ねだん)を上(あ)げる。	가격을 올리다.	pair_raise
+上がる	あがる	上(あ)がる	五段(ごだん)	自動詞(じどうし)	上(あ)げる	Nが上(あ)がる	오르다	to rise; go up	naik	値段(ねだん)が上(あ)がる。	가격이 오르다.	pair_raise
+下げる	さげる	下(さ)げる	一段(いちだん)	他動詞(たどうし)	下(さ)がる	Nを下(さ)げる	내리다; 낮추다	to lower; reduce something	menurunkan	温度(おんど)を下(さ)げる。	온도를 낮추다.	pair_lower
+下がる	さがる	下(さ)がる	五段(ごだん)	自動詞(じどうし)	下(さ)げる	Nが下(さ)がる	내려가다; 낮아지다	to fall; go down	turun	温度(おんど)が下(さ)がる。	온도가 내려간다.	pair_lower
+変える	かえる	変(か)える	一段(いちだん)	他動詞(たどうし)	変(か)わる	Nを変(か)える	바꾸다	to change something	mengubah sesuatu	予定(よてい)を変(か)える。	일정을 바꾸다.	pair_change
+変わる	かわる	変(か)わる	五段(ごだん)	自動詞(じどうし)	変(か)える	Nが変(か)わる	바뀌다	to change; become different	berubah	予定(よてい)が変(か)わる。	일정이 바뀐다.	pair_change
+決める	きめる	決(き)める	一段(いちだん)	他動詞(たどうし)	決(き)まる	Nを決(き)める	정하다; 결정하다	to decide something	menentukan; memutuskan	日程(にってい)を決(き)める。	일정을 정하다.	pair_decide
+決まる	きまる	決(き)まる	五段(ごだん)	自動詞(じどうし)	決(き)める	Nが決(き)まる	정해지다; 결정되다	to be decided	ditetapkan; diputuskan	日程(にってい)が決(き)まる。	일정이 정해진다.	pair_decide
+続ける	つづける	続(つづ)ける	一段(いちだん)	他動詞(たどうし)	続(つづ)く	Nを／Vます-stem＋続(つづ)ける	계속하다	to continue something	melanjutkan	勉強(べんきょう)を続(つづ)ける。	공부를 계속하다.	pair_continue
+続く	つづく	続(つづ)く	五段(ごだん)	自動詞(じどうし)	続(つづ)ける	Nが続(つづ)く	계속되다	to continue; last	berlanjut	雨(あめ)が三日(みっか)も続(つづ)く。	비가 사흘이나 계속된다.	pair_continue
+増やす	ふやす	増(ふ)やす	五段(ごだん)	他動詞(たどうし)	増(ふ)える	Nを増(ふ)やす	늘리다	to increase something	menambah; meningkatkan	語彙(ごい)を増(ふ)やす。	어휘를 늘리다.	pair_increase
+増える	ふえる	増(ふ)える	一段(いちだん)	自動詞(じどうし)	増(ふ)やす	Nが増(ふ)える	늘다; 증가하다	to increase; grow	bertambah; meningkat	仕事(しごと)が増(ふ)える。	일이 늘어난다.	pair_increase
+減らす	へらす	減(へ)らす	五段(ごだん)	他動詞(たどうし)	減(へ)る	Nを減(へ)らす	줄이다	to reduce something	mengurangi	無駄(むだ)を減(へ)らす。	낭비를 줄이다.	pair_decrease
+減る	へる	減(へ)る	五段(ごだん)	自動詞(じどうし)	減(へ)らす	Nが減(へ)る	줄다	to decrease; diminish	berkurang	人口(じんこう)が減(へ)る。	인구가 줄어든다.	pair_decrease
+壊す	こわす	壊(こわ)す	五段(ごだん)	他動詞(たどうし)	壊(こわ)れる	Nを壊(こわ)す	부수다; 망가뜨리다	to break something	merusakkan	機械(きかい)を壊(こわ)す。	기계를 망가뜨리다.	pair_break
+壊れる	こわれる	壊(こわ)れる	一段(いちだん)	自動詞(じどうし)	壊(こわ)す	Nが壊(こわ)れる	고장 나다; 부서지다	to break; become broken	rusak	機械(きかい)が壊(こわ)れる。	기계가 고장 난다.	pair_break
+汚す	よごす	汚(よご)す	五段(ごだん)	他動詞(たどうし)	汚(よご)れる	Nを汚(よご)す	더럽히다	to make dirty	mengotori	服(ふく)を汚(よご)す。	옷을 더럽히다.	pair_dirty
+汚れる	よごれる	汚(よご)れる	一段(いちだん)	自動詞(じどうし)	汚(よご)す	Nが汚(よご)れる	더러워지다	to become dirty	menjadi kotor	服(ふく)が汚(よご)れる。	옷이 더러워진다.	pair_dirty
+直す	なおす	直(なお)す	五段(ごだん)	他動詞(たどうし)	直(なお)る	Nを直(なお)す	고치다	to fix; correct something	memperbaiki; mengoreksi	間違(まちが)いを直(なお)す。	실수를 고치다.	pair_fix
+直る	なおる	直(なお)る	五段(ごだん)	自動詞(じどうし)	直(なお)す	Nが直(なお)る	고쳐지다; 낫다	to be fixed; recover	menjadi baik; sembuh	時計(とけい)が直(なお)る。	시계가 고쳐진다.	pair_fix
+届ける	とどける	届(とど)ける	一段(いちだん)	他動詞(たどうし)	届(とど)く	Nを人(ひと)／場所(ばしょ)に届(とど)ける	배달하다; 전달하다	to deliver something	mengantarkan	荷物(にもつ)を家(いえ)に届(とど)ける。	짐을 집에 배달하다.	pair_deliver
+届く	とどく	届(とど)く	五段(ごだん)	自動詞(じどうし)	届(とど)ける	Nが人(ひと)／場所(ばしょ)に届(とど)く	도착하다; 전달되다	to arrive; be delivered	sampai; terkirim	荷物(にもつ)が家(いえ)に届(とど)く。	짐이 집에 도착하다.	pair_deliver
+調べる	しらべる	調(しら)べる	一段(いちだん)	他動詞(たどうし)	—	Nを調(しら)べる	알아보다; 조사하다	to investigate; look up	mencari tahu; memeriksa	言葉(ことば)の意味(いみ)を調(しら)べる。	단어의 뜻을 알아보다.	core_verb
+比べる	くらべる	比(くら)べる	一段(いちだん)	他動詞(たどうし)	—	AとBを比(くら)べる	비교하다	to compare	membandingkan	二(ふた)つの方法(ほうほう)を比(くら)べる。	두 가지 방법을 비교하다.	core_verb
+選ぶ	えらぶ	選(えら)ぶ	五段(ごだん)	他動詞(たどうし)	—	Nを選(えら)ぶ	고르다; 선택하다	to choose; select	memilih	正(ただ)しい答(こた)えを選(えら)ぶ。	정답을 고르다.	core_verb
+伝える	つたえる	伝(つた)える	一段(いちだん)	他動詞(たどうし)	—	内容(ないよう)を人(ひと)に伝(つた)える	전하다; 전달하다	to convey; tell	menyampaikan	予定(よてい)を友達(ともだち)に伝(つた)える。	일정을 친구에게 전하다.	core_verb
+尋ねる	たずねる	尋(たず)ねる	一段(いちだん)	他動詞(たどうし)	—	人(ひと)にNを尋(たず)ねる	묻다; 여쭙다	to ask; inquire	bertanya	先生(せんせい)に意味(いみ)を尋(たず)ねる。	선생님께 뜻을 묻다.	core_verb
+断る	ことわる	断(ことわ)る	五段(ごだん)	他動詞(たどうし)	—	Nを断(ことわ)る	거절하다	to refuse; decline	menolak	誘(さそ)いを断(ことわ)る。	초대를 거절하다.	core_verb
+間に合う	まにあう	間(ま)に合(あ)う	五段(ごだん)	自動詞(じどうし)	—	Nに間(ま)に合(あ)う	제시간에 맞다; 늦지 않다	to be in time	tepat waktu; sempat	試験(しけん)に間(ま)に合(あ)う。	시험에 늦지 않다.	core_verb
+気づく	きづく	気(き)づく	五段(ごだん)	自動詞(じどうし)	—	Nに気(き)づく	깨닫다; 알아차리다	to notice; realize	menyadari	間違(まちが)いに気(き)づく。	실수를 알아차리다.	core_verb
+慣れる	なれる	慣(な)れる	一段(いちだん)	自動詞(じどうし)	—	Nに慣(な)れる	익숙해지다	to get used to	terbiasa dengan	日本(にほん)の生活(せいかつ)に慣(な)れる。	일본 생활에 익숙해지다.	core_verb
+似る	にる	似(に)る	一段(いちだん)	自動詞(じどうし)	—	Nに似(に)ている	닮다	to resemble	mirip dengan	母(はは)に似(に)ている。	어머니를 닮았다.	core_verb
+役立つ	やくだつ	役立(やくだ)つ	五段(ごだん)	自動詞(じどうし)	—	Nに役立(やくだ)つ	도움이 되다	to be useful; help	berguna untuk	仕事(しごと)に役立(やくだ)つ。	일에 도움이 되다.	core_verb
+支払う	しはらう	支払(しはら)う	五段(ごだん)	他動詞(たどうし)	—	Nを支払(しはら)う	지불하다	to pay	membayar	料金(りょうきん)を支払(しはら)う。	요금을 지불하다.	core_verb
+受け取る	うけとる	受(う)け取(と)る	五段(ごだん)	他動詞(たどうし)	—	Nを受(う)け取(と)る	받다; 수령하다	to receive; accept	menerima	荷物(にもつ)を受(う)け取(と)る。	짐을 받다.	core_verb
+過ごす	すごす	過(す)ごす	五段(ごだん)	他動詞(たどうし)	—	時間(じかん)を過(す)ごす	보내다	to spend time	menghabiskan waktu	家族(かぞく)と休日(きゅうじつ)を過(す)ごす。	가족과 휴일을 보내다.	core_verb
+進む	すすむ	進(すす)む	五段(ごだん)	自動詞(じどうし)	進(すす)める	Nが／方向(ほうこう)へ進(すす)む	나아가다; 진행되다	to advance; proceed	maju; berlangsung	計画(けいかく)が順調(じゅんちょう)に進(すす)む。	계획이 순조롭게 진행된다.	core_verb
+戻る	もどる	戻(もど)る	五段(ごだん)	自動詞(じどうし)	戻(もど)す	場所(ばしょ)に／へ戻(もど)る	돌아가다; 돌아오다	to return	kembali	会社(かいしゃ)に戻(もど)る。	회사로 돌아가다.	core_verb
+迎える	むかえる	迎(むか)える	一段(いちだん)	他動詞(たどうし)	—	人(ひと)を迎(むか)える	맞이하다; 마중하다	to welcome; meet	menyambut; menjemput	駅(えき)で友達(ともだち)を迎(むか)える。	역에서 친구를 마중하다.	core_verb
+守る	まもる	守(まも)る	五段(ごだん)	他動詞(たどうし)	—	Nを守(まも)る	지키다	to protect; obey	menjaga; menaati	約束(やくそく)を守(まも)る。	약속을 지키다.	core_verb
+避ける	さける	避(さ)ける	一段(いちだん)	他動詞(たどうし)	—	Nを避(さ)ける	피하다	to avoid	menghindari	危険(きけん)を避(さ)ける。	위험을 피하다.	core_verb
+認める	みとめる	認(みと)める	一段(いちだん)	他動詞(たどうし)	—	Nを認(みと)める	인정하다	to recognize; admit	mengakui	自分(じぶん)の間違(まちが)いを認(みと)める。	자신의 실수를 인정하다.	core_verb

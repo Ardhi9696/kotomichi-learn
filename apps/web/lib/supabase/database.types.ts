@@ -17,11 +17,15 @@ export type Database = {
       content_items: {
         Row: {
           character: string | null
+          archived_at: string | null
+          base_locale: string
           content_origin: string
           content_type: Database["public"]["Enums"]["content_type"]
           created_at: string
           current_snapshot_id: string | null
           current_source_fingerprint: string | null
+          deck_id: string | null
+          external_id: string | null
           first_seen_snapshot_id: string | null
           id: string
           identity_key: string
@@ -35,11 +39,15 @@ export type Database = {
         }
         Insert: {
           character?: string | null
+          archived_at?: string | null
+          base_locale?: string
           content_origin?: string
           content_type: Database["public"]["Enums"]["content_type"]
           created_at?: string
           current_snapshot_id?: string | null
           current_source_fingerprint?: string | null
+          deck_id?: string | null
+          external_id?: string | null
           first_seen_snapshot_id?: string | null
           id?: string
           identity_key: string
@@ -53,11 +61,15 @@ export type Database = {
         }
         Update: {
           character?: string | null
+          archived_at?: string | null
+          base_locale?: string
           content_origin?: string
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string
           current_snapshot_id?: string | null
           current_source_fingerprint?: string | null
+          deck_id?: string | null
+          external_id?: string | null
           first_seen_snapshot_id?: string | null
           id?: string
           identity_key?: string
@@ -70,6 +82,13 @@ export type Database = {
           word?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "content_items_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "content_items_current_snapshot_id_fkey"
             columns: ["current_snapshot_id"]
@@ -92,6 +111,170 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      deck_imports: {
+        Row: {
+          applied_at: string | null
+          checksum: string
+          created_at: string
+          deck_id: string
+          diff: Json
+          id: string
+          imported_by: string
+          normalized_payload: Json
+          rejected_at: string | null
+          row_errors: Json
+          row_warnings: Json
+          status: Database["public"]["Enums"]["deck_import_status"]
+        }
+        Insert: {
+          applied_at?: string | null
+          checksum: string
+          created_at?: string
+          deck_id: string
+          diff?: Json
+          id?: string
+          imported_by: string
+          normalized_payload: Json
+          rejected_at?: string | null
+          row_errors?: Json
+          row_warnings?: Json
+          status?: Database["public"]["Enums"]["deck_import_status"]
+        }
+        Update: {
+          applied_at?: string | null
+          checksum?: string
+          created_at?: string
+          deck_id?: string
+          diff?: Json
+          id?: string
+          imported_by?: string
+          normalized_payload?: Json
+          rejected_at?: string | null
+          row_errors?: Json
+          row_warnings?: Json
+          status?: Database["public"]["Enums"]["deck_import_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deck_imports_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deck_vocabulary: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          deck_id: string
+          display: string | null
+          examples: Json
+          external_id: string
+          import_id: string
+          meanings_en: string[]
+          meanings_id: string[]
+          meanings_ko: string[]
+          pair_external_id: string | null
+          tags: string[]
+          updated_at: string
+          usage_frame: string | null
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          deck_id: string
+          display?: string | null
+          examples?: Json
+          external_id: string
+          import_id: string
+          meanings_en?: string[]
+          meanings_id: string[]
+          meanings_ko?: string[]
+          pair_external_id?: string | null
+          tags?: string[]
+          updated_at?: string
+          usage_frame?: string | null
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          deck_id?: string
+          display?: string | null
+          examples?: Json
+          external_id?: string
+          import_id?: string
+          meanings_en?: string[]
+          meanings_id?: string[]
+          meanings_ko?: string[]
+          pair_external_id?: string | null
+          tags?: string[]
+          updated_at?: string
+          usage_frame?: string | null
+        }
+        Relationships: []
+      }
+      decks: {
+        Row: {
+          active_import_id: string | null
+          archived_at: string | null
+          created_at: string
+          description: string
+          id: string
+          kind: Database["public"]["Enums"]["deck_kind"]
+          owner_id: string | null
+          review_notes: string | null
+          review_status: Database["public"]["Enums"]["deck_review_status"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          rights_attestation: string | null
+          rights_attested_at: string | null
+          submitted_at: string | null
+          title: string
+          updated_at: string
+          visibility: Database["public"]["Enums"]["deck_visibility"]
+        }
+        Insert: {
+          active_import_id?: string | null
+          archived_at?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["deck_kind"]
+          owner_id?: string | null
+          review_notes?: string | null
+          review_status?: Database["public"]["Enums"]["deck_review_status"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rights_attestation?: string | null
+          rights_attested_at?: string | null
+          submitted_at?: string | null
+          title: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["deck_visibility"]
+        }
+        Update: {
+          active_import_id?: string | null
+          archived_at?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["deck_kind"]
+          owner_id?: string | null
+          review_notes?: string | null
+          review_status?: Database["public"]["Enums"]["deck_review_status"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rights_attestation?: string | null
+          rights_attested_at?: string | null
+          submitted_at?: string | null
+          title?: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["deck_visibility"]
+        }
+        Relationships: []
       }
       content_reports: {
         Row: {
@@ -522,6 +705,7 @@ export type Database = {
       }
       learning_session_items: {
         Row: {
+          card_direction: Database["public"]["Enums"]["card_direction"]
           client_attempt_id: string
           completed_at: string | null
           content_item_id: string
@@ -533,6 +717,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          card_direction?: Database["public"]["Enums"]["card_direction"]
           client_attempt_id?: string
           completed_at?: string | null
           content_item_id: string
@@ -544,6 +729,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          card_direction?: Database["public"]["Enums"]["card_direction"]
           client_attempt_id?: string
           completed_at?: string | null
           content_item_id?: string
@@ -578,9 +764,11 @@ export type Database = {
           content_types: Database["public"]["Enums"]["content_type"][]
           correct_item_count: number
           created_at: string
+          deck_id: string | null
           id: string
           level: Database["public"]["Enums"]["jlpt_level"]
           session_mode: string
+          study_direction: Database["public"]["Enums"]["study_direction"]
           started_at: string
           target_item_count: number
           user_id: string
@@ -591,9 +779,11 @@ export type Database = {
           content_types: Database["public"]["Enums"]["content_type"][]
           correct_item_count?: number
           created_at?: string
+          deck_id?: string | null
           id?: string
           level: Database["public"]["Enums"]["jlpt_level"]
           session_mode?: string
+          study_direction?: Database["public"]["Enums"]["study_direction"]
           started_at?: string
           target_item_count: number
           user_id: string
@@ -604,9 +794,11 @@ export type Database = {
           content_types?: Database["public"]["Enums"]["content_type"][]
           correct_item_count?: number
           created_at?: string
+          deck_id?: string | null
           id?: string
           level?: Database["public"]["Enums"]["jlpt_level"]
           session_mode?: string
+          study_direction?: Database["public"]["Enums"]["study_direction"]
           started_at?: string
           target_item_count?: number
           user_id?: string
@@ -1008,6 +1200,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_deck_import: {
+        Args: { p_import_id: string }
+        Returns: Json
+      }
       apply_learning_review: {
         Args: {
           p_attempts_count: number
@@ -1119,6 +1315,23 @@ export type Database = {
           p_source_version: string
         }
         Returns: string
+      }
+      get_deck_learning_candidates: {
+        Args: {
+          p_adjective_types: Database["public"]["Enums"]["vocabulary_adjective_type"][]
+          p_deck_id: string
+          p_level: Database["public"]["Enums"]["jlpt_level"]
+          p_limit: number
+        }
+        Returns: { content_item_id: string }[]
+      }
+      reject_deck_import: {
+        Args: { p_import_id: string; p_notes: string }
+        Returns: boolean
+      }
+      submit_deck_for_review: {
+        Args: { p_attestation: string; p_deck_id: string; p_import_id: string }
+        Returns: boolean
       }
       delete_own_account: {
         Args: Record<PropertyKey, never>
@@ -1239,7 +1452,12 @@ export type Database = {
     }
     Enums: {
       app_role: "editor" | "reviewer" | "admin" | "superadmin"
+      card_direction: "recognition" | "production"
       content_type: "vocabulary" | "kanji" | "grammar"
+      deck_import_status: "preview" | "pending" | "applied" | "rejected" | "failed"
+      deck_kind: "official" | "user"
+      deck_review_status: "draft" | "pending" | "approved" | "rejected"
+      deck_visibility: "private" | "public"
       jlpt_level: "N5" | "N4" | "N3" | "N2" | "N1"
       learning_status: "new" | "learning" | "review" | "mastered"
       report_status: "open" | "triaged" | "resolved" | "rejected"
@@ -1250,6 +1468,7 @@ export type Database = {
         | "active"
         | "archived"
         | "failed"
+      study_direction: "recognition" | "production" | "mixed"
       translation_locale: "id" | "ko"
       translation_status: "draft" | "reviewed" | "published" | "needs_review"
       vocabulary_adjective_type: "i" | "na"
@@ -1394,7 +1613,12 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["editor", "reviewer", "admin", "superadmin"],
+      card_direction: ["recognition", "production"],
       content_type: ["vocabulary", "kanji", "grammar"],
+      deck_import_status: ["preview", "pending", "applied", "rejected", "failed"],
+      deck_kind: ["official", "user"],
+      deck_review_status: ["draft", "pending", "approved", "rejected"],
+      deck_visibility: ["private", "public"],
       jlpt_level: ["N5", "N4", "N3", "N2", "N1"],
       learning_status: ["new", "learning", "review", "mastered"],
       report_status: ["open", "triaged", "resolved", "rejected"],
@@ -1406,6 +1630,7 @@ export const Constants = {
         "archived",
         "failed",
       ],
+      study_direction: ["recognition", "production", "mixed"],
       translation_locale: ["id", "ko"],
       translation_status: ["draft", "reviewed", "published", "needs_review"],
       vocabulary_adjective_type: ["i", "na"],
