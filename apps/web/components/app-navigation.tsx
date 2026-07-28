@@ -234,6 +234,7 @@ function NavigationGroup({
                 }`}
                 href={item.href}
                 onClick={onNavigate}
+                prefetch={true}
               >
                 <span
                   className={`grid size-9 shrink-0 place-items-center rounded-lg ${
