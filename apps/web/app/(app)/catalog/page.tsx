@@ -10,6 +10,7 @@ import {
   isCatalogType,
   isCatalogViewMode,
   isLevel,
+  isPageSize,
   isVocabularyAdjectiveType,
   isVocabularyPartOfSpeech,
   isVocabularyTheme,
@@ -37,6 +38,7 @@ function parseQuery(
   const level = first(searchParams.level);
   const type = first(searchParams.type);
   const rawPage = Number(first(searchParams.page) ?? '1');
+  const rawPageSize = Number(first(searchParams.pageSize) ?? '25');
   const view = first(searchParams.view);
   const partOfSpeech = first(searchParams.pos);
   const verbGroup = first(searchParams.verb);
@@ -57,6 +59,7 @@ function parseQuery(
       : 'all',
     theme: isVocabularyTheme(theme) ? theme : 'all',
     page: Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1,
+    pageSize: isPageSize(rawPageSize) ? rawPageSize : 25,
   };
 }
 

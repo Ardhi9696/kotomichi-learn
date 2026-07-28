@@ -39,7 +39,7 @@ export default async function TranslationEditorPage({ params, searchParams }: Pa
   );
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+    <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14" key={`${id}-${locale}`}>
       <div className="flex flex-wrap justify-between gap-4">
         <Link className="text-sm font-semibold text-primary hover:underline" href={`/translations?locale=${locale}`}>
           ← Translation workspace

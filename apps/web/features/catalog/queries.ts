@@ -71,8 +71,6 @@ type TaxonomyRow = Pick<
   | 'needs_review'
 >;
 
-const DEFAULT_PAGE_SIZE = 24;
-
 function cleanSearchTerm(value: string): string {
   return value.trim().replaceAll(/[,%()]/g, '').slice(0, 80);
 }
@@ -367,7 +365,7 @@ function rowToCatalogItem(row: CatalogRow): CatalogItem {
 
 async function getCatalogUncached(query: CatalogQuery): Promise<CatalogResult> {
   const client = createPublicClient();
-  const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
+  const pageSize = query.pageSize;
   const page = Math.max(1, query.page);
   const from = (page - 1) * pageSize;
 

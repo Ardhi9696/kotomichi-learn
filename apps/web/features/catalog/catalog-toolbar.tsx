@@ -34,6 +34,7 @@ const DEFAULTS: Record<string, string> = {
   type: 'all',
   view: 'list',
   page: '1',
+  pageSize: '25',
 };
 
 export function CatalogToolbar({ query, total }: { query: CatalogQuery; total: number }) {

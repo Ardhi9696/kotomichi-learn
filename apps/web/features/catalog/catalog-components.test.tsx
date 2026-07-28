@@ -16,6 +16,7 @@ const query: CatalogQuery = {
   adjectiveType: 'all',
   theme: 'food_drink',
   page: 2,
+  pageSize: 25,
 };
 
 const item: CatalogItem = {

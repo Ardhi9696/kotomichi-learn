@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   VOCABULARY_ADJECTIVE_TYPES,
@@ -19,14 +19,26 @@ import {
   verbGroupLabels,
 } from '@/features/catalog/vocabulary-taxonomy';
 
-function activeFilterCount(query: CatalogQuery): number {
-  return [
-    query.partOfSpeech,
-    query.verbGroup,
-    query.transitivity,
-    query.adjectiveType,
-    query.theme,
-  ].filter((v) => v !== 'all').length;
+type FilterValues = {
+  pos: string;
+  verb: string;
+  transitivity: string;
+  adjective: string;
+  theme: string;
+};
+
+function initialFilterValues(query: CatalogQuery): FilterValues {
+  return {
+    pos: query.partOfSpeech,
+    verb: query.verbGroup,
+    transitivity: query.transitivity,
+    adjective: query.adjectiveType,
+    theme: query.theme,
+  };
+}
+
+function activeFilterCount(values: FilterValues): number {
+  return Object.values(values).filter((v) => v !== 'all').length;
 }
 
 export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery }) {
@@ -34,11 +46,22 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<FilterValues>(() => initialFilterValues(query));
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  const navigate = useCallback(
-    (updates: Record<string, string>) => {
+  // Sync draft when query changes externally (e.g. URL navigation)
+  useEffect(() => {
+    setDraft(initialFilterValues(query));
+  }, [query.partOfSpeech, query.verbGroup, query.transitivity, query.adjectiveType, query.theme]);
+
+  const updateDraft = useCallback((key: keyof FilterValues, value: string) => {
+    setDraft((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  const applyFilters = useCallback(
+    (values: FilterValues) => {
       const params = new URLSearchParams(searchParams.toString());
-      for (const [key, value] of Object.entries(updates)) {
+      for (const [key, value] of Object.entries(values)) {
         if (value && value !== 'all') params.set(key, value);
         else params.delete(key);
       }
@@ -48,7 +71,43 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
     [pathname, searchParams, router],
   );
 
-  const count = activeFilterCount(query);
+  const handleApply = useCallback(() => {
+    applyFilters(draft);
+    setOpen(false);
+  }, [applyFilters, draft]);
+
+  const handleReset = useCallback(() => {
+    const resetValues: FilterValues = {
+      pos: 'all',
+      verb: 'all',
+      transitivity: 'all',
+      adjective: 'all',
+      theme: 'all',
+    };
+    setDraft(resetValues);
+    applyFilters(resetValues);
+    setOpen(false);
+  }, [applyFilters]);
+
+  const handleClose = useCallback(() => {
+    // Apply any pending changes before closing
+    applyFilters(draft);
+    setOpen(false);
+  }, [applyFilters, draft]);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, handleClose]);
+
+  const count = activeFilterCount(draft);
 
   return (
     <div className="relative">
@@ -75,19 +134,24 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
 
       {open ? (
         <>
+          {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
+            onClick={handleClose}
           />
-          <div className="absolute top-full left-0 z-20 mt-2 grid w-[min(42rem,calc(100vw-2.5rem))] gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card sm:right-0 sm:left-auto sm:grid-cols-2">
+          {/* Centered modal panel */}
+          <div
+            ref={panelRef}
+            className="fixed left-1/2 top-1/2 z-50 grid w-[min(42rem,calc(100vw-2.5rem))] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card sm:grid-cols-2"
+          >
             <FilterSelect
               label="Kelas kata"
               options={VOCABULARY_PARTS_OF_SPEECH.map((v) => ({
                 value: v,
                 label: partOfSpeechLabels[v],
               }))}
-              value={query.partOfSpeech}
-              onChange={(val) => navigate({ pos: val })}
+              value={draft.pos}
+              onChange={(val) => updateDraft('pos', val)}
             />
             <FilterSelect
               label="Kelompok verba"
@@ -95,8 +159,8 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
                 value: v,
                 label: verbGroupLabels[v],
               }))}
-              value={query.verbGroup}
-              onChange={(val) => navigate({ verb: val })}
+              value={draft.verb}
+              onChange={(val) => updateDraft('verb', val)}
             />
             <FilterSelect
               label="Transitivitas"
@@ -104,8 +168,8 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
                 value: v,
                 label: transitivityLabels[v],
               }))}
-              value={query.transitivity}
-              onChange={(val) => navigate({ transitivity: val })}
+              value={draft.transitivity}
+              onChange={(val) => updateDraft('transitivity', val)}
             />
             <FilterSelect
               label="Jenis adjektiva"
@@ -113,8 +177,8 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
                 value: v,
                 label: adjectiveTypeLabels[v],
               }))}
-              value={query.adjectiveType}
-              onChange={(val) => navigate({ adjective: val })}
+              value={draft.adjective}
+              onChange={(val) => updateDraft('adjective', val)}
             />
             <FilterSelect
               label="Tema"
@@ -122,23 +186,14 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
                 value: v,
                 label: themeLabels[v],
               }))}
-              value={query.theme}
-              onChange={(val) => navigate({ theme: val })}
+              value={draft.theme}
+              onChange={(val) => updateDraft('theme', val)}
             />
             <div className="flex items-end gap-2 sm:justify-end sm:col-start-2">
               {count > 0 ? (
                 <button
                   className="grid h-11 place-items-center rounded-xl border border-border px-4 text-sm font-semibold hover:text-primary"
-                  onClick={() => {
-                    navigate({
-                      pos: 'all',
-                      verb: 'all',
-                      transitivity: 'all',
-                      adjective: 'all',
-                      theme: 'all',
-                    });
-                    setOpen(false);
-                  }}
+                  onClick={handleReset}
                   type="button"
                 >
                   Reset
@@ -146,10 +201,10 @@ export function CatalogVocabularyFiltersPopover({ query }: { query: CatalogQuery
               ) : null}
               <button
                 className="h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
-                onClick={() => setOpen(false)}
+                onClick={handleApply}
                 type="button"
               >
-                Tutup
+                Terapkan
               </button>
             </div>
           </div>

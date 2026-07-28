@@ -3,6 +3,8 @@ import type { Enums, Json } from '@/lib/supabase/database.types';
 export const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'] as const;
 export const CONTENT_TYPES = ['vocabulary', 'kanji', 'grammar'] as const;
 export const CATALOG_VIEW_MODES = ['grid', 'list'] as const;
+export const PAGE_SIZES = [10, 25, 50, 100] as const;
+export type PageSize = (typeof PAGE_SIZES)[number];
 export const VOCABULARY_PARTS_OF_SPEECH = [
   'noun',
   'verb',
@@ -102,7 +104,7 @@ export type CatalogQuery = {
   adjectiveType: VocabularyAdjectiveType | 'all';
   theme: VocabularyTheme | 'all';
   page: number;
-  pageSize?: number;
+  pageSize: PageSize;
 };
 
 export type CatalogResult = {
@@ -160,6 +162,10 @@ export function isVocabularyTheme(
   value: string | undefined,
 ): value is VocabularyTheme {
   return includesValue(VOCABULARY_THEMES, value);
+}
+
+export function isPageSize(value: number): value is PageSize {
+  return (PAGE_SIZES as readonly number[]).includes(value);
 }
 
 export function isLocale(value: string | undefined): value is Locale {
